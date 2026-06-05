@@ -39,3 +39,68 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+
+# Expo
+.expo/
+.expo-shared/
+.expo/web-build/
+.expo/packager-info.json
+.expo/settings.json
+
+# Expo Application Services
+.eas/
+dist/
+build/
+*.apk
+*.aab
+*.ipa
+
+# React Native
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+package-lock.json
+*.log
+
+# Metro bundler
+.expo/
+.expo-shared/
+metro-cache/
+metro-cache-*
+.expo/web-build/
+
+# macOS
+.DS_Store
+
+# Android
+android/.gradle/
+android/app/build/
+android/build/
+*.keystore
+*.jks
+
+# iOS
+ios/Pods/
+ios/build/
+ios/*.xcodeproj/xcuserdata/
+ios/*.xcworkspace/xcuserdata/
+*.xcuserstate
+
+# VS Code
+.vscode/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Images, caches, misc
+*.png.tmp
+*.jpg.tmp
+*.jpeg.tmp
+*.gif.tmp
+*.psd
+*.sketch
+*.tmp

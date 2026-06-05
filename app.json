@@ -18,7 +18,13 @@
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    }
+      "favicon": "./assets/favicon.png",
+      "backgroundColor": "#1E3828"
+    },
+    "plugins": [
+      "expo-font",
+      "expo-video",
+      "expo-audio"
+    ]
   }
 }
