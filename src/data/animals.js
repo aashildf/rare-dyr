@@ -73,7 +73,7 @@ export const animals = [
     petScore: 5,
     petComment: "Ville stirret på deg hele natten.",
     funFact: "Øynene er så store at de ikke kan bevege dem — den snur hele hodet i stedet!",
-    moreInfo: null,
+    moreInfo: "Tarsieren tilhører en liten og spesiell dyrefamilie, og de finnes bare i skogene i Sørøst-Asia. De er halvaper — det betyr at de er litt i slekt med oss mennesker! De enorme ørene, som nesten ligner flaggermusører, fanger opp de minste lyder. Det gjør tarsieren til en utmerket jeger — den kan hoppe opp og snappe insekter og til og med små flaggermus rett ut av luften!\n\nBakbeina er ekstra lange og gjør tarsieren til en fantastisk hopper. Den lange, tynne halen hjelper den å holde balansen, og fingertuppene og tåtuppene fungerer som sugekopper. Det betyr at den kan klatre på loddrette trestammer uten å falle! Hendene har negler, men noen av tærne har klør — disse bruker den til å stelle pelsen sin. En tarsier veier bare 100–180 gram, omtrent like mye som et eple.",
     shortFacts: [
       { icon: "special", text: "Hvert øye veier mer enn hjernen!" },
       { icon: "food",    text: "Den er den eneste primaten som bare spiser kjøtt." },
@@ -233,7 +233,7 @@ export const animals = [
     petScore: 7,
     petComment: "Ganske søt, men vanskelig å stelle.",
     funFact: "Du kan se rett gjennom magen — organene er synlige!",
-    moreInfo: null,
+    moreInfo: "Det finnes over 150 forskjellige arter av glassfrosker, og alle lever i Sør-Amerika. Fra oversiden ser de ut som helt vanlige, små grønne frosker. Men snu dem opp-ned — og plutselig kan du se rett inn i kroppen! Du kan se hjertet slå, magen jobbe og skjelettet lyse gjennom. Det er som å se inn i en levende modell fra naturfagtimen!\n\nGlassfroskene sover om dagen og er aktive om natten. Og når de sover, gjør de noe veldig smart: de sover opp-ned på undersiden av blader med nøyaktig samme grønne farge som sin egen rygg. Når sollyset skinner gjennom bladet og den gjennomsiktige frosken, blir de nesten usynlige for sultne rovdyr.\n\nNoen glassfrosker gjemmer til og med blodet sitt! Om natten er blodet rødt og synlig, men om dagen gjemmer noen arter blodet i leveren slik at kroppen ser mer gjennomsiktig og grønn ut — perfekt kamuflasje mot plantebladene.\n\nGlassfroskene er ikke de eneste gjennomsiktige dyrene i naturen. Sommerfuglen Greta oto har helt klare, gjennomsiktige vinger. Andre frosker bruker stikk motsatt strategi — sterke, giftige farger for å skremme rovdyr vekk!",
     shortFacts: [
       {
         icon: "special",
@@ -247,8 +247,13 @@ export const animals = [
     habitatImage: null,
     audioFact: null,
     image: require("../../assets/animals/land/glassfrosk.png"),
+    subImages: [
+      require("../../assets/animals/land/glassfrosk_detalj.png"),
+      require("../../assets/animals/land/glassfrosk_hode.png"),
+    ],
     video: null,
     discovered: false,
+    related: [25],
   },
   {
     id: 6,
@@ -511,7 +516,7 @@ export const animals = [
     petComment: "Du måtte hatt et akvarium med trykket fra 800 meters havdyp!",
     funFact:
       'Den ser bare "blob-aktig" ut når den kommer opp — nede ser den normal ut.',
-    moreInfo: null,
+    moreInfo: 'Blobfisken lever på 600–1200 meters dybde utenfor kysten av Australia — så dypt at nesten ingen mennesker har sett den! Nede i mørket ser den faktisk helt normal ut, men når den hales opp til overflaten smetter kroppen ut og den blir til en trist geléklump. Det er fordi den ikke har noen muskler å snakke om — kroppen er nesten helt laget av en myk, geléaktig masse som gjør det enkelt å flyte rundt uten å bruke energi.\n\nBlobfisken har en stor, hengende "nese" mellom øynene og et ansikt som mange synes ser uendelig trist ut. Den er kåret til verdens styggeste fisk! Den er heller ikke særlig rask — den bare flyter sakte langs bunnen og venter på at mat skal komme til den. Ingen har faktisk sett den spise, men forskere tror den bare holder munnen åpen og sluker det som driver forbi.\n\nSelvom den ser rar ut, er blobfisken truet! Dypvannstrålere som fisker etter andre ting haler den opp ved et uhell.',
     shortFacts: [
       {
         icon: "special",
@@ -991,6 +996,42 @@ export const animals = [
     subImages: [
       require("../../assets/animals/luft/flygende_hund_fot.png"),
       require("../../assets/animals/luft/flygende_hund_hode.png"),
+    ],
+    video: null,
+    discovered: false,
+  },
+  {
+    id: 25,
+    name: "Glassvingsommerfugl",
+    emoji: "🦋",
+    category: "luft",
+    animalType: "Insekt",
+    habitatTag: "Sommerfugl",
+    nickname: "Den usynlige flyveren",
+    location: "Mellom- og Sør-Amerika",
+    size: "5–6 cm vingespenn",
+    weight: "Under 1 gram",
+    diet: "Nektar fra Lantana-blomster",
+    activeTime: "Dagdyr",
+    tracks: "Ingen — flyr lavt i skogen.",
+    rarity: "ikke_truet",
+    rarityText: "Ikke truet",
+    rarityEmoji: "🙂",
+    rarityDetail: "Bestanden er stabil.",
+    petScore: 3,
+    petComment: "Vakker å se på, men trenger blomstereng og frihet.",
+    funFact: "Vingene er helt gjennomsiktige — rovdyr klarer ikke å følge den i luften!",
+    moreInfo: "Glassvingsommerfuglen er en av naturens mestere i usynlighet! Vingene dens er helt gjennomsiktige — akkurat som glass — fordi de mangler de fargede skjellene som vanlige sommerfugler har. Det betyr at fugler som prøver å fange den har veldig vanskelig for å følge med på den i luften. Den forsvinner rett foran øynene på dem!\n\nDen spiser nektar fra blomster som Lantana, og legger eggene sine på planter i søtvierfamilien. Disse plantene inneholder giftige stoffer som er farlige for mange dyr — men ikke for glassvingsommerfuglen. Det er dens lille hemmelighet.\n\nI motsetning til glassfrosken, som gjemmer seg ved å sitte stille, bruker glassvingsommerfuglen bevegelse til sin fordel. Når den flyr, er det nesten umulig å se hvor vingene er — som om bare kroppen svever gjennom luften!",
+    shortFacts: [
+      { icon: "special", text: "Vingene mangler fargede skjell og er like klare som glass." },
+      { icon: "defense", text: "Gjennomsiktige vinger gjør den usynlig for fugler i flukt." },
+    ],
+    habitatImage: null,
+    audioFact: null,
+    image: require("../../assets/animals/luft/glassvinge_sommerfugl.png"),
+    subImages: [
+      require("../../assets/animals/luft/greta_oto.png"),
+      require("../../assets/animals/luft/greta_oto_wing.png"),
     ],
     video: null,
     discovered: false,

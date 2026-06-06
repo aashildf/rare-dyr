@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View, Text, Image, ScrollView,
   TouchableOpacity, StyleSheet, useWindowDimensions,
 } from 'react-native';
+import * as Speech from 'expo-speech';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, spacing, radius, typography } from '../theme';
@@ -10,92 +11,56 @@ import { rf, scale } from '../utils/responsive';
 import { getById, CATEGORIES, rarityColor } from '../data/animals';
 import AppHeader from '../components/AppHeader';
 
-// Lille ikonbokser for kortfakta
-const FACT_ICONS = {
-  defense: { bg: '#3A4A3A', symbol: '🛡' },
-  food:    { bg: '#3A3A1A', symbol: '🍽' },
-  habitat: { bg: '#1A3A3A', symbol: '🌿' },
-  special: { bg: '#3A1A3A', symbol: '✦' },
+const RARITY_STARS = {
+  ikke_truet:    { stars: 1, label: 'Vanlig' },
+  sjelden:       { stars: 2, label: 'Uvanlig' },
+  truet:         { stars: 3, label: 'Sjelden' },
+  sterkt_truet:  { stars: 4, label: 'Ekstremt sjelden' },
+  kritisk_truet: { stars: 5, label: 'Nesten mytisk' },
 };
 
-function FactRow({ label, value, valueColor, last, textColor }) {
+function FactCard({ label, value, icon, full }) {
   return (
-    <View style={[styles.factRow, last && styles.factRowLast]}>
-      <Text style={[styles.factLabel, textColor && { color: textColor, opacity: 0.65 }]}>{label}</Text>
-      <Text style={[styles.factValue, textColor && { color: textColor }, valueColor && { color: valueColor }]} numberOfLines={3}>
-        {value}
-      </Text>
+    <View style={[styles.factCard, full && styles.factCardFull]}>
+      {icon && <Image source={icon} style={styles.factIcon} resizeMode="contain" />}
+      <View style={styles.factContent}>
+        <Text style={styles.factLabel}>{label}</Text>
+        <Text style={styles.factValue}>{value}</Text>
+      </View>
     </View>
   );
 }
 
-function SpeechBubble({ text }) {
-  return (
-    <View style={styles.bubbleWrapper}>
-      <View style={styles.bubble}>
-        <Text style={styles.bubbleText}>{text}</Text>
-      </View>
-      {/* Hale på boblen */}
-      <View style={styles.bubbleTail} />
-    </View>
-  );
-}
-
-function TopCard({ animal, cat }) {
-  const { width } = useWindowDimensions();
-  const mainH = width * 0.72;
-  const subH  = width * 0.30;
-
-  return (
-    <View style={styles.topCard}>
-      {/* Stort bilde — ingen ramme, border-radius 24 */}
-      <View style={[styles.mainImageBox, { height: mainH }]}>
-        {animal.image
-          ? <Image source={animal.image} style={styles.fillImage} resizeMode="cover" />
-          : (
-            <View style={[styles.imagePlaceholder, { backgroundColor: cat.color + '44' }]}>
-              <Text style={{ fontSize: rf(80) }}>{animal.emoji}</Text>
-            </View>
-          )
-        }
-        {/* Raritets-chip + snakkeboble over bilde */}
-        <View style={[styles.rarityIcon, { backgroundColor: rarityColor(animal.rarity) }]}>
-          <Text style={styles.rarityIconText}>{animal.rarityText}</Text>
-        </View>
-        <SpeechBubble text={animal.funFact} />
-      </View>
-
-      {/* To små bilder under — ingen ramme */}
-      <View style={styles.subRow}>
-        {animal.shortFacts?.map((fact, i) => {
-          const iconConf = FACT_ICONS[fact.icon] ?? FACT_ICONS.special;
-          const subImg   = animal.subImages?.[i] ?? animal.image ?? null;
-          return (
-            <View key={i} style={styles.subCard}>
-              <View style={[styles.subImageBox, { height: subH, backgroundColor: iconConf.bg }]}>
-                {subImg
-                  ? <Image source={subImg} style={styles.fillImage} resizeMode="cover" />
-                  : null
-                }
-              </View>
-              <Text style={[styles.subCaption, { color: cat.textColor }]}>{fact.text}</Text>
-            </View>
-          );
-        })}
-      </View>
-    </View>
-  );
+function RarityCard() {
+  return null;
 }
 
 export default function AnimalDetailScreen({ route, navigation }) {
   const animalId = route?.params?.animalId ?? 1;
   const animal   = getById(animalId);
   const { width } = useWindowDimensions();
+  const [speaking, setSpeaking] = useState(false);
 
   if (!animal) return null;
 
-  const cat   = CATEGORIES[animal.category] ?? CATEGORIES.land;
-  const index = route?.params?.listIndex ?? animal.id;
+  const cat = CATEGORIES[animal.category] ?? CATEGORIES.land;
+
+  const handleSpeak = () => {
+    if (speaking) {
+      Speech.stop();
+      setSpeaking(false);
+    } else {
+      const text = `${animal.name}. ${animal.funFact ?? ''} ${animal.moreInfo ?? ''}`.trim();
+      setSpeaking(true);
+      Speech.speak(text, {
+        language: 'nb-NO',
+        onDone: () => setSpeaking(false),
+        onError: () => setSpeaking(false),
+      });
+    }
+  };
+
+  const rarityConfig = RARITY_STARS[animal.rarity] ?? { stars: 1, label: 'Ukjent' };
 
   return (
     <LinearGradient
@@ -103,405 +68,464 @@ export default function AnimalDetailScreen({ route, navigation }) {
       locations={cat.gradientLocations ?? undefined}
       start={cat.gradientStart}
       end={cat.gradientEnd}
-      style={styles.gradient}
+      style={styles.screen}
     >
       <SafeAreaView style={styles.safeArea}>
-
         <AppHeader navigation={navigation} logo={cat.logo} />
 
-        {/* Nav-bar */}
+        {/* NAV-BAR */}
         <View style={styles.navBar}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
-            <Image source={require('../../assets/svg/pil.svg')} style={styles.backArrow} resizeMode="contain" />
+            <Text style={styles.backArrow}>‹</Text>
           </TouchableOpacity>
           <Text style={styles.navTitle}>{animal.name}</Text>
-          <View style={styles.navSpacer} />
+          <View style={{ width: 32 }} />
         </View>
 
-        {/* Panel med rett kant, marg mot gradienten */}
-        <View style={[styles.panel, { backgroundColor: cat.panelColor, marginHorizontal: 6 }]}>
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
+        {/* PANEL */}
+        <View style={styles.panel}>
+          <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
 
-          {/* TOPPKORT */}
-          <TopCard animal={animal} cat={cat} />
-
-          {/* HØR FAKTA + SE VIDEO */}
-          <View style={styles.buttonRow}>
-            <TouchableOpacity style={[styles.btn, styles.btnFakta]}>
-              <Image source={require('../../assets/ikoner/lyd_symbol.png')} style={[styles.btnIcon, { tintColor: '#29332A' }]} resizeMode="contain" />
-              <Text style={styles.btnFaktaText}>HØR FAKTA</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.btn, styles.btnVideo]}
-              onPress={() => animal.video && navigation.navigate('Video', { animalId: animal.id })}
-              activeOpacity={0.8}
-            >
-              <Image source={require('../../assets/ikoner/play_symbol.png')} style={[styles.btnIcon, { tintColor: '#FAF9F5' }]} resizeMode="contain" />
-              <Text style={styles.btnVideoText}>SE VIDEO</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Faktabolk */}
-          <View style={styles.factBlock}>
-            <FactRow label="Hvor lever den?" value={animal.location}    textColor={cat.textColor} />
-            <FactRow label="Størrelse"       value={animal.size}        textColor={cat.textColor} />
-            <FactRow label="Vekt"            value={animal.weight}      textColor={cat.textColor} />
-            <FactRow label="Hva spiser den?" value={animal.diet}        textColor={cat.textColor} />
-            <FactRow label="Dag eller natt?" value={animal.activeTime}  textColor={cat.textColor} />
-            <FactRow label="Sporene"         value={animal.tracks}      textColor={cat.textColor} />
-            <FactRow
-              label="Hvor sjelden?"
-              value={`${animal.rarityText} — ${animal.rarityDetail}`}
-              textColor={cat.textColor}
-            />
-            <FactRow
-              label="Som kjæledyr"
-              value={`${animal.petScore < 0 ? animal.petScore : animal.petScore}/10 — ${animal.petComment}`}
-              textColor={cat.textColor}
-              last
-            />
-          </View>
-
-          {/* Visste du at */}
-          <View style={styles.section}>
-            <Text style={[styles.sectionQ, { color: cat.textColor }]}>Visste du at...?</Text>
-            <View style={styles.funFactBox}>
-              <Text style={[styles.funFactText, { color: cat.textColor }]}>{animal.funFact}</Text>
-            </View>
-          </View>
-
-          {/* Mer info */}
-          {animal.moreInfo && (
-            <View style={styles.section}>
-              <Text style={[styles.bodyText, { color: cat.textColor }]}>{animal.moreInfo}</Text>
-            </View>
-          )}
-
-          {/* Oppdagelsesreise */}
-          <View style={styles.discoveryBar}>
-            <Image source={require('../../assets/oppdagelsesbok.png')} style={styles.discoverysilva} resizeMode="contain" />
-            <View style={{ flex: 1 }}>
-              <Text style={[styles.discoveryLabel, { color: cat.textColor }]}>Din oppdagelsesreise</Text>
-              <View style={styles.progressBar}>
-                <View style={[styles.progressFill, { width: '80%' }]} />
+            {/* BILDE MED NAVN-OVERLAY */}
+            <View style={[styles.imageBox, { height: width * 0.72 }]}>
+              {animal.image
+                ? <Image source={animal.image} style={styles.fillImage} resizeMode="cover" />
+                : <View style={[styles.imagePlaceholder, { backgroundColor: cat.color + '44' }]}>
+                    <Text style={{ fontSize: rf(80) }}>{animal.emoji}</Text>
+                  </View>
+              }
+              {/* Gradient over bilde for lesbarhet */}
+              <LinearGradient
+                colors={['transparent', 'rgba(0,0,0,0.65)']}
+                style={styles.imageOverlay}
+              />
+              {/* Navn og tags på bildet */}
+              <View style={styles.imageInfo}>
+                <Text style={styles.imageName}>{animal.name}</Text>
+                <View style={styles.imageTags}>
+                  <View style={[styles.imageTag, { backgroundColor: rarityColor(animal.rarity) }]}>
+                    <Text style={styles.imageTagText}>{animal.rarityText}</Text>
+                  </View>
+                  <View style={[styles.imageTag, { backgroundColor: 'rgba(244,239,230,0.2)' }]}>
+                    <Text style={styles.imageTagText}>{animal.animalType}</Text>
+                  </View>
+                </View>
               </View>
-              <Text style={[styles.discoveryHint, { color: cat.textColor, opacity: 0.7 }]}>
-                Svar på en oppgave for å få {animal.name}-merket!
-              </Text>
             </View>
-            <Text style={[styles.discoveryPct, { color: cat.textColor }]}>80%</Text>
-          </View>
 
-          <View style={{ height: spacing.xxl }} />
-        </ScrollView>
-        </View>{/* panel */}
+            {/* KNAPPER */}
+            <View style={styles.buttonRow}>
+              <TouchableOpacity style={[styles.btn, styles.btnFakta, speaking && styles.btnActive]} onPress={handleSpeak} activeOpacity={0.8}>
+                <Image source={require('../../assets/ikoner/lyd_symbol.png')} style={[styles.btnIcon, { tintColor: '#29332A' }]} resizeMode="contain" />
+                <Text style={styles.btnFaktaText}>HØR FAKTA</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.btn, styles.btnVideo]}
+                onPress={() => animal.video && navigation.navigate('Video', { animalId: animal.id })}
+                activeOpacity={0.8}
+              >
+                <Image source={require('../../assets/ikoner/play_symbol.png')} style={[styles.btnIcon, { tintColor: '#FAF9F5' }]} resizeMode="contain" />
+                <Text style={styles.btnVideoText}>SE VIDEO</Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* FAKTAGRID — 2 kolonner */}
+            <View style={styles.factGrid}>
+              <View style={styles.factRow}>
+                <FactCard label="Størrelse"       value={animal.size}     icon={require('../../assets/ikoner/storrelse.png')} />
+                <FactCard label="Vekt"            value={animal.weight}   icon={require('../../assets/ikoner/vekt.png')} />
+              </View>
+              <View style={styles.factRow}>
+                <FactCard label="Hvor lever den?" value={animal.location} icon={require('../../assets/ikoner/levested.png')} />
+                <FactCard label="Hva spiser den?" value={animal.diet}     icon={require('../../assets/ikoner/spiser.png')} />
+              </View>
+              <View style={styles.factRow}>
+                <FactCard label="Sporene"         value={animal.tracks}   icon={require('../../assets/ikoner/spor.png')} />
+                <View style={styles.factCard}>
+                  <Image source={require('../../assets/ikoner/skjelden.png')} style={styles.factIcon} resizeMode="contain" />
+                  <View style={styles.factContent}>
+                    <Text style={styles.factLabel}>Sjeldenthet</Text>
+                    <View style={{ flexDirection: 'row', gap: 1 }}>
+                      {[1,2,3,4,5].map(i => (
+                        <Text key={i} style={{ color: i <= rarityConfig.stars ? '#E5A800' : '#D0CCC4', fontSize: rf(12) }}>★</Text>
+                      ))}
+                    </View>
+                    <Text style={[styles.factValue, { fontSize: rf(11) }]}>{rarityConfig.label}</Text>
+                  </View>
+                </View>
+              </View>
+              <View style={styles.factRow}>
+                <FactCard label="Dag eller natt?" value={animal.activeTime} icon={require('../../assets/ikoner/dag_eller_natt.png')} />
+              </View>
+              <View style={styles.factRow}>
+                <FactCard
+                  label="Som kjæledyr"
+                  value={`${animal.petScore}/10 — ${animal.petComment}`}
+                  icon={require('../../assets/ikoner/kjeledyr.png')}
+                />
+              </View>
+            </View>
+
+            {/* VISSTE DU? */}
+            <View style={styles.funFactCard}>
+              <Image source={require('../../assets/ikoner/visste_du.png')} style={styles.funFactIcon} resizeMode="contain" />
+              <View style={{ flex: 1 }}>
+                <Text style={styles.funFactTitle}>Visste du?</Text>
+                <Text style={styles.funFactText}>{animal.funFact}</Text>
+              </View>
+              {animal.image && (
+                <Image source={animal.image} style={styles.funFactImg} resizeMode="contain" />
+              )}
+            </View>
+
+            {/* MER INFO */}
+            {animal.moreInfo && (
+              <Text style={styles.moreInfoText}>{animal.moreInfo}</Text>
+            )}
+
+            {/* SE OGSÅ */}
+            {animal.related?.length > 0 && (
+              <View style={styles.relatedSection}>
+                <Text style={styles.relatedTitle}>Se også</Text>
+                {animal.related.map(id => {
+                  const rel = getById(id);
+                  if (!rel) return null;
+                  return (
+                    <TouchableOpacity
+                      key={id}
+                      style={styles.relatedCard}
+                      onPress={() => navigation.push('DyrDetalj', { animalId: id })}
+                      activeOpacity={0.8}
+                    >
+                      {rel.image
+                        ? <Image source={rel.image} style={styles.relatedImg} resizeMode="cover" />
+                        : <View style={[styles.relatedImg, { backgroundColor: '#C8D4F5', justifyContent: 'center', alignItems: 'center' }]}>
+                            <Text style={{ fontSize: rf(32) }}>{rel.emoji}</Text>
+                          </View>
+                      }
+                      <View style={styles.relatedInfo}>
+                        <Text style={styles.relatedName}>{rel.name}</Text>
+                        <Text style={styles.relatedFact} numberOfLines={2}>{rel.funFact}</Text>
+                      </View>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            )}
+
+            {/* GALLERI */}
+            {animal.subImages?.length > 0 && (
+              <View style={styles.gallerySection}>
+                <Text style={styles.sectionTitle}>Bildegalleri</Text>
+                <View style={styles.galleryRow}>
+                  {animal.subImages.map((img, i) => (
+                    <View key={i} style={styles.galleryCard}>
+                      <Image source={img} style={styles.galleryImg} resizeMode="cover" />
+                    </View>
+                  ))}
+                </View>
+              </View>
+            )}
+
+            <View style={{ height: spacing.xxl * 3 }} />
+          </ScrollView>
+        </View>
       </SafeAreaView>
     </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  gradient: { flex: 1 },
+  screen:   { flex: 1 },
   safeArea: { flex: 1 },
 
-  panel: {
-    flex: 1,
-    overflow: 'hidden',
-  },
-
   navBar: {
-    backgroundColor: '#F4EFE6',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    height: 64,
-    paddingLeft: 20,
-    paddingRight: 20,
-    marginHorizontal: 6,
+    backgroundColor: '#F4EFE6',
+    paddingHorizontal: spacing.lg,
+    height: 52,
   },
-  backBtn:   { justifyContent: 'center', alignItems: 'center' },
-  backArrow: { width: 24, height: 24, tintColor: '#004D56' },
+  backBtn: { justifyContent: 'center', alignItems: 'center' },
+  backArrow: {
+    fontSize: rf(32),
+    color: '#29332A',
+    lineHeight: rf(36),
+  },
   navTitle: {
-    fontFamily: 'Quicksand_600SemiBold',
-    fontSize: 24,
-    lineHeight: 32,
-    fontWeight: '600',
-    color: '#004D56',
-    flex: 1,
-    textAlign: 'right',
-  },
-  navSpacer: { width: 24 },
-
-  scroll: { paddingHorizontal: 24, paddingTop: 24, paddingBottom: spacing.xxl },
-
-  // ── TOPPKORT — ingen ramme ───────────────────────────────────────────
-  topCard: {
-    marginBottom: spacing.lg,
-  },
-  rarityIcon: {
-    position: 'absolute',
-    top: spacing.md,
-    left: spacing.md,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 4,
-    borderRadius: radius.full,
-  },
-  rarityIconText: {
     fontFamily: typography.fonts.bodyBold,
-    fontSize: rf(11),
-    color: colors.cream,
+    fontSize: rf(20),
+    color: '#004D56',
   },
 
-  // Stort bilde — radius 24, ingen ramme
-  mainImageBox: {
+  panel: {
+    flex: 1,
+    backgroundColor: '#F4EFE6',
+    overflow: 'hidden',
+  },
+  scroll: { paddingBottom: spacing.xxl },
+
+  // ── BILDE ───────────────────────────────────────────────────────────
+  imageBox: {
     width: '100%',
     overflow: 'hidden',
     backgroundColor: '#1a2e1a',
-    borderRadius: 24,
-    justifyContent: 'flex-end',
   },
   fillImage: {
     width: '100%',
     height: '100%',
     position: 'absolute',
-    top: 0,
-    left: 0,
   },
   imagePlaceholder: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-
-  // Snakkeboble
-  bubbleWrapper: {
+  imageOverlay: {
     position: 'absolute',
-    bottom: spacing.xl,
-    right: spacing.md,
-    alignItems: 'flex-end',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: '55%',
   },
-  bubble: {
-    backgroundColor: colors.cream,
-    borderRadius: radius.lg,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    maxWidth: 160,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 4,
+  imageInfo: {
+    position: 'absolute',
+    bottom: spacing.lg,
+    left: spacing.lg,
   },
-  bubbleText: {
-    fontFamily: typography.fonts.bubble,
-    fontSize: rf(12),
-    color: colors.primary,
-    lineHeight: rf(17),
+  imageName: {
+    fontFamily: typography.fonts.bodyBold,
+    fontSize: rf(28),
+    color: '#F4EFE6',
+    marginBottom: spacing.xs,
   },
-  bubbleTail: {
-    width: 0,
-    height: 0,
-    borderLeftWidth: 8,
-    borderRightWidth: 8,
-    borderTopWidth: 10,
-    borderLeftColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderTopColor: colors.cream,
-    marginRight: spacing.lg,
-  },
-
-  // Sub-bilder
-  subRow: {
+  imageTags: {
     flexDirection: 'row',
-    padding: spacing.md,
-    gap: spacing.md,
+    gap: spacing.sm,
   },
-  subCard: {
-    flex: 1,
-    gap: spacing.xs,
-    minWidth: 0,
+  imageTag: {
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 4,
+    borderRadius: radius.full,
   },
-  subImageBox: {
-    width: '100%',
-    borderRadius: 12,
-    overflow: 'hidden',
-  },
-  subIconOverlay: {
-    position: 'absolute',
-    top: spacing.xs,
-    left: spacing.xs,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    borderRadius: radius.sm,
-    padding: 4,
-  },
-  subIcon:    { fontSize: rf(14) },
-  subCaption: {
-    fontFamily: typography.fonts.bodyRegular,
+  imageTagText: {
+    fontFamily: typography.fonts.bodyBold,
     fontSize: rf(12),
-    color: colors.cream,
-    lineHeight: rf(17),
+    color: '#F4EFE6',
   },
 
-  // ── KNAPPER ────────────────────────────────────────────────────────
+  // ── KNAPPER ─────────────────────────────────────────────────────────
   buttonRow: {
     gap: spacing.sm,
-    marginBottom: spacing.lg,
+    padding: spacing.lg,
   },
   btn: {
     flexDirection: 'row',
-    paddingVertical: 24,
-    paddingHorizontal: 0,
+    paddingVertical: spacing.lg,
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 16,
-    borderRadius: 24,
-    borderWidth: 1,
-    borderColor: '#FAF9F5',
+    gap: spacing.md,
+    borderRadius: radius.xl,
   },
-  btnIcon: {
-    width: scale(24),
-    height: scale(24),
-  },
+  btnIcon: { width: scale(22), height: scale(22) },
   btnFakta: {
     backgroundColor: '#E5D8A4',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.18,
+    shadowRadius: 8,
+    elevation: 4,
   },
+  btnActive: { backgroundColor: '#C9C090' },
   btnFaktaText: {
-    fontFamily: 'Quicksand_600SemiBold',
-    fontSize: 24,
-    lineHeight: 30,
+    fontFamily: typography.fonts.bodyBold,
+    fontSize: rf(18),
     color: '#29332A',
     letterSpacing: 0.5,
   },
   btnVideo: {
     backgroundColor: '#004D56',
-  },
-  btnDisabled: {
-    opacity: 0.45,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 5,
   },
   btnVideoText: {
-    fontFamily: 'Quicksand_600SemiBold',
-    fontSize: 24,
-    lineHeight: 30,
+    fontFamily: typography.fonts.bodyBold,
+    fontSize: rf(18),
     color: '#FAF9F5',
     letterSpacing: 0.5,
   },
 
-  // ── FAKTABOLK ────────────────────────────────────────────────────────
-  factBlock: {
-    backgroundColor: 'rgba(244,239,230,0.12)',
-    borderRadius: radius.xl,
+  // ── FAKTAGRID ───────────────────────────────────────────────────────
+  factGrid: {
+    paddingHorizontal: spacing.lg,
+    gap: spacing.sm,
     marginBottom: spacing.lg,
-    overflow: 'hidden',
-    borderWidth: 3,
-    borderColor: '#F4EFE6',
   },
   factRow: {
     flexDirection: 'row',
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255,255,255,0.08)',
-    gap: spacing.md,
-    alignItems: 'flex-start',
-  },
-  factRowLast: {
-    borderBottomWidth: 0,
-  },
-  factLabel: {
-    fontFamily: 'Quicksand_600SemiBold',
-    fontSize: rf(13),
-    lineHeight: rf(20),
-    width: '38%',
-    paddingTop: 1,
-    // farge settes via textColor-prop i FactRow
-  },
-  factValue: {
-    fontFamily: 'Quicksand_400Regular',
-    fontSize: rf(14),
-    lineHeight: rf(21),
-    flex: 1,
-    // farge settes via textColor-prop i FactRow
-  },
-
-  // ── SEKSJONER ────────────────────────────────────────────────────────
-  section: {
-    marginBottom: spacing.lg,
     gap: spacing.sm,
   },
-  sectionQ: {
+  factCard: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    borderRadius: radius.lg,
+    padding: spacing.md,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: spacing.sm,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.07,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  factCardFull: {
+    flex: 0,
+    alignSelf: 'stretch',
+  },
+  factIconBox: {
+    width: scale(70),
+    height: scale(70),
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexShrink: 0,
+  },
+  factIconDot: {
+    width: scale(18),
+    height: scale(18),
+    borderRadius: scale(9),
+    backgroundColor: 'rgba(0,0,0,0.12)',
+  },
+  factIcon: { width: scale(56), height: scale(56) },
+  factContent: { flex: 1 },
+  factLabel: {
     fontFamily: typography.fonts.bodyBold,
-    ...typography.h3,
-    color: colors.secondary,
+    fontSize: rf(12),
+    color: '#29332A',
+    marginBottom: 3,
+  },
+  factValue: {
+    fontFamily: typography.fonts.bodyRegular,
+    fontSize: rf(12),
+    color: '#766E66',
+    lineHeight: rf(18),
+  },
+
+  // ── VISSTE DU? ──────────────────────────────────────────────────────
+  funFactCard: {
+    backgroundColor: '#29676A',
+    marginHorizontal: spacing.lg,
+    borderRadius: radius.xl,
+    padding: spacing.lg,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    marginBottom: spacing.lg,
+  },
+  funFactTitle: {
+    fontFamily: typography.fonts.bodyBold,
+    fontSize: rf(16),
+    color: '#F4EFE6',
+    marginBottom: 6,
+  },
+  funFactText: {
+    fontFamily: typography.fonts.bodyRegular,
+    fontSize: rf(13),
+    color: '#F4EFE6',
+    lineHeight: rf(20),
+    flex: 1,
+  },
+  funFactImg: {
+    width: scale(90),
+    height: scale(90),
+  },
+  funFactIcon: {
+    width: scale(56),
+    height: scale(56),
+    alignSelf: 'flex-start',
+  },
+
+  // ── MER INFO ────────────────────────────────────────────────────────
+  moreInfoText: {
+    fontFamily: typography.fonts.bodyRegular,
+    fontSize: rf(14),
+    color: '#29332A',
+    lineHeight: rf(22),
+    paddingHorizontal: spacing.lg,
+    marginBottom: spacing.lg,
+  },
+
+  // ── SE OGSÅ ─────────────────────────────────────────────────────────
+  relatedSection: {
+    paddingHorizontal: spacing.lg,
+    marginBottom: spacing.lg,
+  },
+  relatedTitle: {
+    fontFamily: typography.fonts.bodyBold,
+    fontSize: rf(15),
+    color: '#29332A',
+    marginBottom: spacing.sm,
+  },
+  relatedCard: {
+    flexDirection: 'row',
+    backgroundColor: '#FFFFFF',
+    borderRadius: radius.lg,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  relatedImg: {
+    width: scale(80),
+    height: scale(80),
+  },
+  relatedInfo: {
+    flex: 1,
+    padding: spacing.md,
+    justifyContent: 'center',
+  },
+  relatedName: {
+    fontFamily: typography.fonts.bodyBold,
+    fontSize: rf(14),
+    color: '#29332A',
+    marginBottom: 4,
+  },
+  relatedFact: {
+    fontFamily: typography.fonts.bodyRegular,
+    fontSize: rf(12),
+    color: '#766E66',
+    lineHeight: rf(18),
+  },
+
+  // ── GALLERI ─────────────────────────────────────────────────────────
+  gallerySection: {
+    paddingHorizontal: spacing.lg,
+    marginBottom: spacing.lg,
   },
   sectionTitle: {
     fontFamily: typography.fonts.bodyBold,
-    ...typography.h3,
-    color: colors.cream,
+    fontSize: rf(15),
+    color: '#29332A',
+    marginBottom: spacing.sm,
   },
-  funFactBox: {
-    backgroundColor: 'rgba(244,239,230,0.12)',
-    borderRadius: radius.lg,
-    padding: spacing.md,
-    borderWidth: 3,
-    borderColor: '#F4EFE6',
-  },
-  funFactText: {
-    fontFamily: typography.fonts.bodyBold,
-    ...typography.body,
-    color: colors.cream,
-    lineHeight: rf(24),
-  },
-  bodyText: {
-    fontFamily: typography.fonts.bodyRegular,
-    ...typography.body,
-    color: colors.cream,
-    lineHeight: rf(22),
-  },
-  habitatImg: {
-    width: '100%',
-    borderRadius: radius.lg,
-    overflow: 'hidden',
-    marginTop: spacing.xs,
-  },
-
-
-  // ── OPPDAGELSESREISE ────────────────────────────────────────────────
-  discoveryBar: {
+  galleryRow: {
     flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.25)',
-    borderRadius: radius.lg,
-    padding: spacing.md,
     gap: spacing.sm,
-    marginBottom: spacing.md,
   },
-  discoverysilva: { width: scale(44), height: scale(44) },
-  discoveryLabel: {
-    fontFamily: typography.fonts.bodyBold,
-    ...typography.caption,
-    color: colors.cream,
-    marginBottom: 4,
-  },
-  progressBar: {
-    height: 6,
-    backgroundColor: 'rgba(255,255,255,0.15)',
-    borderRadius: radius.full,
+  galleryCard: {
+    flex: 1,
+    aspectRatio: 1,
+    borderRadius: radius.lg,
     overflow: 'hidden',
   },
-  progressFill: {
+  galleryImg: {
+    width: '100%',
     height: '100%',
-    backgroundColor: colors.secondary,
-    borderRadius: radius.full,
-  },
-  discoveryHint: {
-    fontFamily: typography.fonts.bodyRegular,
-    fontSize: rf(11),
-    color: colors.textMuted,
-    marginTop: 4,
-  },
-  discoveryPct: {
-    fontFamily: typography.fonts.bodyBold,
-    ...typography.h3,
-    color: colors.secondary,
   },
 });

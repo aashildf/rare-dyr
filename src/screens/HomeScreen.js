@@ -256,13 +256,13 @@ export default function HomeScreen({ navigation }) {
           <TouchableOpacity
             style={styles.featuredCard}
             activeOpacity={0.85}
-            onPress={() => navigation.navigate("DyrDetalj", { animalId: 1 })}
+            onPress={() => navigation.navigate("DyrDetalj", { animalId: 4 })}
           >
             <View style={styles.featuredImageBox}>
               <Image
                 source={require("../../assets/frosk.png")}
                 style={styles.featuredImg}
-                resizeMode="contain"
+                resizeMode="cover"
               />
               <View style={styles.dagensTag}>
                 <Text style={styles.dagensTagText}>DAGENS TEMA</Text>
@@ -278,7 +278,7 @@ export default function HomeScreen({ navigation }) {
                   <Text style={styles.locationIcon}>📍</Text>
                   <Text style={styles.locationText}>Afrika & Asia</Text>
                 </View>
-                <TouchableOpacity style={styles.utforskButton}>
+                <TouchableOpacity style={styles.utforskButton} onPress={() => navigation.navigate("DyrDetalj", { animalId: 4 })}>
                   <Text style={styles.utforskText}>Utforsk</Text>
                 </TouchableOpacity>
               </View>
@@ -566,7 +566,7 @@ const styles = StyleSheet.create({
   featuredSubtitle: {
     fontFamily: typography.fonts.bodyRegular,
     ...typography.body,
-    color: colors.textSecondary,
+    color: colors.primary,
     marginTop: 2,
   },
   featuredFooter: {
@@ -588,7 +588,7 @@ const styles = StyleSheet.create({
   locationText: {
     fontFamily: typography.fonts.bodyRegular,
     ...typography.caption,
-    color: colors.textSecondary,
+    color: colors.primary,
   },
   utforskButton: {
     backgroundColor: colors.teal,

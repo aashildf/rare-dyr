@@ -5,6 +5,7 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SvgXml } from 'react-native-svg';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const tannhjulSvg = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19.43 12.97C19.47 12.65 19.5 12.33 19.5 12C19.5 11.67 19.47 11.34 19.43 11L21.54 9.37C21.73 9.22 21.78 8.95 21.67 8.72L19.67 5.28C19.56 5.05 19.27 4.96 19.05 5.05L16.56 6.05C16.04 5.66 15.5 5.32 14.87 5.07L14.5 2.42C14.46 2.18 14.25 2 14 2H10C9.75 2 9.54 2.18 9.5 2.42L9.13 5.07C8.5 5.32 7.96 5.66 7.44 6.05L4.95 5.05C4.73 4.96 4.44 5.05 4.33 5.28L2.33 8.72C2.21 8.95 2.27 9.22 2.46 9.37L4.57 11C4.53 11.34 4.5 11.67 4.5 12C4.5 12.33 4.53 12.65 4.57 12.97L2.46 14.63C2.27 14.78 2.21 15.05 2.33 15.28L4.33 18.72C4.44 18.95 4.73 19.03 4.95 18.95L7.44 17.94C7.96 18.34 8.5 18.68 9.13 18.93L9.5 21.58C9.54 21.82 9.75 22 10 22H14C14.25 22 14.46 21.82 14.5 21.58L14.87 18.93C15.5 18.68 16.04 18.34 16.56 17.94L19.05 18.95C19.27 19.03 19.56 18.95 19.67 18.72L21.67 15.28C21.78 15.05 21.73 14.78 21.54 14.63L19.43 12.97ZM12 15.5C10.07 15.5 8.5 13.93 8.5 12C8.5 10.07 10.07 8.5 12 8.5C13.93 8.5 15.5 10.07 15.5 12C15.5 13.93 13.93 15.5 12 15.5Z" fill="#3F4A39"/></svg>`;
 
@@ -123,6 +124,7 @@ const NAV_ITEMS = [
 
 export default function MenuDrawer({ visible, onClose, navigation }) {
   const { width, height } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
   const drawerWidth = Math.min(width * 0.78, 340);
   const slideAnim  = useRef(new Animated.Value(drawerWidth)).current;
   const fadeAnim   = useRef(new Animated.Value(0)).current;
@@ -147,14 +149,14 @@ export default function MenuDrawer({ visible, onClose, navigation }) {
       Animated.parallel([
         Animated.timing(slideAnim, {
           toValue: drawerWidth,
-          duration: 240,
-          easing: Easing.bezier(0.4, 0, 1, 1), // ease-in — akselererer ut
+          duration: 420,
+          easing: Easing.bezier(0.4, 0, 0.6, 1),
           useNativeDriver: false,
         }),
         Animated.timing(fadeAnim, {
           toValue: 0,
-          duration: 200,
-          easing: Easing.in(Easing.quad),
+          duration: 380,
+          easing: Easing.out(Easing.cubic),
           useNativeDriver: false,
         }),
       ]).start();
@@ -212,7 +214,7 @@ export default function MenuDrawer({ visible, onClose, navigation }) {
             colors={["#3F4A39", "#B6D2C6"]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
-            style={styles.drawerGradient}
+            style={[styles.drawerGradient, { paddingTop: Math.max(insets.top, spacing.xl) }]}
           >
             {/* Header */}
             <View style={styles.drawerHeader}>
