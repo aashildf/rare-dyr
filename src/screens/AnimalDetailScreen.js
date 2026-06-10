@@ -19,12 +19,55 @@ const RARITY_STARS = {
   kritisk_truet: { stars: 5, label: 'Nesten mytisk' },
 };
 
-function FactCard({ label, value, icon, full }) {
+function parseSizeLevel(str = '') {
+  const nums = (str.match(/\d+/g) || []).map(Number);
+  if (!nums.length) return 3;
+  const max = Math.max(...nums);
+  const inM = /\d\s*m(?!g|m)/i.test(str);
+  const cm  = inM ? max * 100 : max;
+  if (cm < 15)  return 1;
+  if (cm < 50)  return 2;
+  if (cm < 150) return 3;
+  if (cm < 300) return 4;
+  return 5;
+}
+
+function parseWeightLevel(str = '') {
+  const nums = (str.match(/\d+/g) || []).map(Number);
+  if (!nums.length) return 3;
+  const max = Math.max(...nums);
+  const g = /tonn/i.test(str) ? max * 1e6 : /kg/i.test(str) ? max * 1000 : max;
+  if (g < 200)    return 1;
+  if (g < 2000)   return 2;
+  if (g < 20000)  return 3;
+  if (g < 200000) return 4;
+  return 5;
+}
+
+function LevelDots({ level, color = '#29676A' }) {
   return (
-    <View style={[styles.factCard, full && styles.factCardFull]}>
-      {icon && <Image source={icon} style={styles.factIcon} resizeMode="contain" />}
+    <View style={{ flexDirection: 'row', gap: 4, marginTop: 4, marginBottom: 2 }}>
+      {[1,2,3,4,5].map(i => (
+        <View key={i} style={{
+          width: 7, height: 7, borderRadius: 4,
+          backgroundColor: i <= level ? color : '#D0CCC4',
+        }} />
+      ))}
+    </View>
+  );
+}
+
+function FactCard({ label, value, icon, full, level, levelColor, color }) {
+  return (
+    <View style={[styles.factCard, full && styles.factCardFull, color && { backgroundColor: color }]}>
+      {icon && (
+        <View style={styles.factIconBox}>
+          <Image source={icon} style={styles.factIcon} resizeMode="contain" />
+        </View>
+      )}
       <View style={styles.factContent}>
         <Text style={styles.factLabel}>{label}</Text>
+        {level !== undefined && <LevelDots level={level} color={levelColor ?? '#29676A'} />}
         <Text style={styles.factValue}>{value}</Text>
       </View>
     </View>
@@ -62,6 +105,9 @@ export default function AnimalDetailScreen({ route, navigation }) {
 
   const rarityConfig = RARITY_STARS[animal.rarity] ?? { stars: 1, label: 'Ukjent' };
 
+  const PANEL_COLORS = { land: '#3F4A39', vann: '#004D56', luft: '#DEE0E4' };
+  const panelBg = PANEL_COLORS[animal.category] ?? cat.panelColor;
+
   return (
     <LinearGradient
       colors={cat.gradient}
@@ -73,21 +119,24 @@ export default function AnimalDetailScreen({ route, navigation }) {
       <SafeAreaView style={styles.safeArea}>
         <AppHeader navigation={navigation} logo={cat.logo} />
 
-        {/* NAV-BAR */}
-        <View style={styles.navBar}>
-          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
-            <Text style={styles.backArrow}>‹</Text>
-          </TouchableOpacity>
-          <Text style={styles.navTitle}>{animal.name}</Text>
-          <View style={{ width: 32 }} />
-        </View>
+        {/* YTRE PANEL — kategorifargen, smal, avrundet */}
+        <View style={[styles.outerPanel, { backgroundColor: panelBg }]}>
 
-        {/* PANEL */}
-        <View style={styles.panel}>
-          <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
+          {/* NAV-BAR inni ytre panel */}
+          <View style={styles.navBar}>
+            <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+              <Text style={[styles.backArrow, { color: cat.textColor }]}>‹</Text>
+            </TouchableOpacity>
+            <Text style={[styles.navTitle, { color: cat.textColor }]}>{animal.name}</Text>
+            <View style={{ width: 32 }} />
+          </View>
+
+          {/* INDRE PANEL — innholdsflaten */}
+          <View style={[styles.panel, { backgroundColor: cat.color }]}>
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
 
             {/* BILDE MED NAVN-OVERLAY */}
-            <View style={[styles.imageBox, { height: width * 0.72 }]}>
+            <View style={[styles.imageBox, { height: width * 0.72, marginTop: spacing.md, marginHorizontal: spacing.md }]}>
               {animal.image
                 ? <Image source={animal.image} style={styles.fillImage} resizeMode="cover" />
                 : <View style={[styles.imagePlaceholder, { backgroundColor: cat.color + '44' }]}>
@@ -121,7 +170,7 @@ export default function AnimalDetailScreen({ route, navigation }) {
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.btn, styles.btnVideo]}
-                onPress={() => animal.video && navigation.navigate('Video', { animalId: animal.id })}
+                onPress={() => navigation.navigate('Video', { animalId: animal.id })}
                 activeOpacity={0.8}
               >
                 <Image source={require('../../assets/ikoner/play_symbol.png')} style={[styles.btnIcon, { tintColor: '#FAF9F5' }]} resizeMode="contain" />
@@ -132,37 +181,65 @@ export default function AnimalDetailScreen({ route, navigation }) {
             {/* FAKTAGRID — 2 kolonner */}
             <View style={styles.factGrid}>
               <View style={styles.factRow}>
-                <FactCard label="Størrelse"       value={animal.size}     icon={require('../../assets/ikoner/storrelse.png')} />
-                <FactCard label="Vekt"            value={animal.weight}   icon={require('../../assets/ikoner/vekt.png')} />
+                <FactCard label="Størrelse" value={animal.size}   icon={require('../../assets/ikoner/storrelse.png')} level={parseSizeLevel(animal.size)}   levelColor="#798447" color="#FDF5D7" />
+                <FactCard label="Vekt"      value={animal.weight} icon={require('../../assets/ikoner/vekt.png')}      level={parseWeightLevel(animal.weight)} levelColor="#798447" color="#E9F9F3" />
               </View>
               <View style={styles.factRow}>
-                <FactCard label="Hvor lever den?" value={animal.location} icon={require('../../assets/ikoner/levested.png')} />
-                <FactCard label="Hva spiser den?" value={animal.diet}     icon={require('../../assets/ikoner/spiser.png')} />
+                <FactCard label="Hvor lever den?" value={animal.location} icon={require('../../assets/ikoner/levested.png')} color="#E3F6FF" />
+                <FactCard label="Hva spiser den?" value={animal.diet}     icon={require('../../assets/ikoner/spiser.png')}   color="#FFF1E5" />
               </View>
               <View style={styles.factRow}>
-                <FactCard label="Sporene"         value={animal.tracks}   icon={require('../../assets/ikoner/spor.png')} />
-                <View style={styles.factCard}>
+                <FactCard label="Sporene" value={animal.tracks} icon={require('../../assets/ikoner/spor.png')} color="#BAC0C8" />
+                {/* Dag eller natt */}
+                {(() => {
+                  const t    = (animal.activeTime ?? '').toLowerCase();
+                  const dag  = t.includes('dag')  || t.includes('begge');
+                  const natt = t.includes('natt') || t.includes('begge');
+                  return (
+                    <View style={[styles.factCard, { flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }]}>
+                      <Text style={styles.factLabel}>Dag eller natt?</Text>
+                      <View style={{ flexDirection: 'row', gap: spacing.md, marginTop: 8 }}>
+                        {dag && <Image source={require('../../assets/ikoner/dag.png')} style={{ width: scale(54), height: scale(54) }} resizeMode="contain" />}
+                        {natt && <Image source={require('../../assets/ikoner/natt.png')} style={{ width: scale(54), height: scale(54) }} resizeMode="contain" />}
+                      </View>
+                    </View>
+                  );
+                })()}
+              </View>
+              <View style={styles.factRow}>
+                {/* Sjeldenthet — full bredde */}
+                <View style={[styles.factCard, { backgroundColor: '#FDF5D7' }]}>
                   <Image source={require('../../assets/ikoner/skjelden.png')} style={styles.factIcon} resizeMode="contain" />
                   <View style={styles.factContent}>
                     <Text style={styles.factLabel}>Sjeldenthet</Text>
-                    <View style={{ flexDirection: 'row', gap: 1 }}>
+                    <View style={{ flexDirection: 'row', gap: 4, marginTop: 6, marginBottom: 2 }}>
                       {[1,2,3,4,5].map(i => (
-                        <Text key={i} style={{ color: i <= rarityConfig.stars ? '#E5A800' : '#D0CCC4', fontSize: rf(12) }}>★</Text>
+                        <Text key={i} style={{ color: i <= rarityConfig.stars ? '#E5A800' : '#D0CCC4', fontSize: rf(22) }}>★</Text>
                       ))}
                     </View>
-                    <Text style={[styles.factValue, { fontSize: rf(11) }]}>{rarityConfig.label}</Text>
+                    <Text style={styles.factValue}>{rarityConfig.label}</Text>
                   </View>
                 </View>
               </View>
               <View style={styles.factRow}>
-                <FactCard label="Dag eller natt?" value={animal.activeTime} icon={require('../../assets/ikoner/dag_eller_natt.png')} />
-              </View>
-              <View style={styles.factRow}>
-                <FactCard
-                  label="Som kjæledyr"
-                  value={`${animal.petScore}/10 — ${animal.petComment}`}
-                  icon={require('../../assets/ikoner/kjeledyr.png')}
-                />
+                {/* Som kjæledyr */}
+                <View style={[styles.factCard, { backgroundColor: '#E9F9F3' }]}>
+                  <Image source={require('../../assets/ikoner/kjaeledyr.png')} style={styles.factIcon} resizeMode="contain" />
+                  <View style={styles.factContent}>
+                    <Text style={styles.factLabel}>Som kjæledyr</Text>
+                    <View style={{ flexDirection: 'row', gap: 4, marginTop: 6, marginBottom: 2 }}>
+                      {[1,2,3,4,5,6].map(i => (
+                        <Image
+                          key={i}
+                          source={require('../../assets/ikoner/kjeledyr.png')}
+                          style={{ width: scale(22), height: scale(22), opacity: i <= animal.petScore ? 1 : 0.15 }}
+                          resizeMode="contain"
+                        />
+                      ))}
+                    </View>
+                    <Text style={styles.factValue}>{animal.petComment}</Text>
+                  </View>
+                </View>
               </View>
             </View>
 
@@ -180,13 +257,13 @@ export default function AnimalDetailScreen({ route, navigation }) {
 
             {/* MER INFO */}
             {animal.moreInfo && (
-              <Text style={styles.moreInfoText}>{animal.moreInfo}</Text>
+              <Text style={[styles.moreInfoText, { color: cat.textColor }]}>{animal.moreInfo}</Text>
             )}
 
             {/* SE OGSÅ */}
             {animal.related?.length > 0 && (
               <View style={styles.relatedSection}>
-                <Text style={styles.relatedTitle}>Se også</Text>
+                <Text style={[styles.relatedTitle, { color: cat.textColor }]}>Se også</Text>
                 {animal.related.map(id => {
                   const rel = getById(id);
                   if (!rel) return null;
@@ -219,8 +296,10 @@ export default function AnimalDetailScreen({ route, navigation }) {
                 <Text style={styles.sectionTitle}>Bildegalleri</Text>
                 <View style={styles.galleryRow}>
                   {animal.subImages.map((img, i) => (
-                    <View key={i} style={styles.galleryCard}>
-                      <Image source={img} style={styles.galleryImg} resizeMode="cover" />
+                    <View key={i} style={styles.galleryCardShadow}>
+                      <View style={styles.galleryCard}>
+                        <Image source={img} style={styles.galleryImg} resizeMode="cover" />
+                      </View>
                     </View>
                   ))}
                 </View>
@@ -229,7 +308,8 @@ export default function AnimalDetailScreen({ route, navigation }) {
 
             <View style={{ height: spacing.xxl * 3 }} />
           </ScrollView>
-        </View>
+          </View>{/* indre panel */}
+        </View>{/* ytre panel */}
       </SafeAreaView>
     </LinearGradient>
   );
@@ -239,24 +319,29 @@ const styles = StyleSheet.create({
   screen:   { flex: 1 },
   safeArea: { flex: 1 },
 
+  outerPanel: {
+    flex: 1,
+    marginHorizontal: spacing.lg,
+    borderTopLeftRadius: radius.xl,
+    borderTopRightRadius: radius.xl,
+    overflow: 'hidden',
+  },
+
   navBar: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#F4EFE6',
     paddingHorizontal: spacing.lg,
     height: 52,
   },
   backBtn: { justifyContent: 'center', alignItems: 'center' },
   backArrow: {
     fontSize: rf(32),
-    color: '#29332A',
     lineHeight: rf(36),
   },
   navTitle: {
     fontFamily: typography.fonts.bodyBold,
     fontSize: rf(20),
-    color: '#004D56',
   },
 
   panel: {
@@ -268,9 +353,9 @@ const styles = StyleSheet.create({
 
   // ── BILDE ───────────────────────────────────────────────────────────
   imageBox: {
-    width: '100%',
     overflow: 'hidden',
     backgroundColor: '#1a2e1a',
+    borderRadius: radius.xl,
   },
   fillImage: {
     width: '100%',
@@ -326,7 +411,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: spacing.md,
-    borderRadius: radius.xl,
+    borderRadius: radius.lg,
+    borderWidth: 1.5,
+    borderColor: '#FAF9F5',
   },
   btnIcon: { width: scale(22), height: scale(22) },
   btnFakta: {
@@ -362,8 +449,8 @@ const styles = StyleSheet.create({
   // ── FAKTAGRID ───────────────────────────────────────────────────────
   factGrid: {
     paddingHorizontal: spacing.lg,
-    gap: spacing.sm,
-    marginBottom: spacing.lg,
+    gap: spacing.md,
+    marginBottom: spacing.xl,
   },
   factRow: {
     flexDirection: 'row',
@@ -371,25 +458,28 @@ const styles = StyleSheet.create({
   },
   factCard: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#F4EFE6',
     borderRadius: radius.lg,
     padding: spacing.md,
     flexDirection: 'row',
     alignItems: 'flex-start',
     gap: spacing.sm,
+    borderWidth: 1.5,
+    borderColor: 'rgba(0,0,0,0.12)',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.07,
-    shadowRadius: 4,
-    elevation: 2,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.18,
+    shadowRadius: 8,
+    elevation: 6,
+    boxShadow: '0px 4px 10px rgba(0,0,0,0.14)',
   },
   factCardFull: {
     flex: 0,
     alignSelf: 'stretch',
   },
   factIconBox: {
-    width: scale(70),
-    height: scale(70),
+    width: scale(56),
+    height: scale(56),
     justifyContent: 'center',
     alignItems: 'center',
     flexShrink: 0,
@@ -400,8 +490,47 @@ const styles = StyleSheet.create({
     borderRadius: scale(9),
     backgroundColor: 'rgba(0,0,0,0.12)',
   },
-  factIcon: { width: scale(56), height: scale(56) },
+  factIcon: { width: scale(76), height: scale(76) },
   factContent: { flex: 1 },
+
+  dayNightRow: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+    marginTop: 6,
+    marginBottom: 2,
+  },
+  dayNightHalf: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 8,
+    borderRadius: radius.lg,
+    gap: 3,
+    borderWidth: 1.5,
+    borderColor: 'transparent',
+    backgroundColor: 'transparent',
+  },
+  dayNightInactive: {
+    opacity: 0.25,
+  },
+  dayActive: {
+    backgroundColor: '#FFF3C4',
+    borderColor: '#E5A800',
+    opacity: 1,
+  },
+  nightActive: {
+    backgroundColor: '#1E2447',
+    borderColor: '#5A6ACC',
+    opacity: 1,
+  },
+  dayNightImg: {
+    width: scale(32),
+    height: scale(32),
+  },
+  dayNightLabel: {
+    fontFamily: typography.fonts.bodyBold,
+    fontSize: rf(11),
+  },
   factLabel: {
     fontFamily: typography.fonts.bodyBold,
     fontSize: rf(12),
@@ -411,20 +540,23 @@ const styles = StyleSheet.create({
   factValue: {
     fontFamily: typography.fonts.bodyRegular,
     fontSize: rf(12),
-    color: '#766E66',
+    color: '#2E2B26',
     lineHeight: rf(18),
   },
 
   // ── VISSTE DU? ──────────────────────────────────────────────────────
   funFactCard: {
-    backgroundColor: '#29676A',
+    backgroundColor: '#1A8A8E',
     marginHorizontal: spacing.lg,
     borderRadius: radius.xl,
     padding: spacing.lg,
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.md,
-    marginBottom: spacing.lg,
+    marginBottom: spacing.xl,
+    borderWidth: 2,
+    borderColor: '#E5D8A4',
+    boxShadow: '0px 4px 16px rgba(0,0,0,0.4)',
   },
   funFactTitle: {
     fontFamily: typography.fonts.bodyBold,
@@ -444,9 +576,10 @@ const styles = StyleSheet.create({
     height: scale(90),
   },
   funFactIcon: {
-    width: scale(56),
-    height: scale(56),
+    width: scale(72),
+    height: scale(72),
     alignSelf: 'flex-start',
+    flexShrink: 0,
   },
 
   // ── MER INFO ────────────────────────────────────────────────────────
@@ -456,23 +589,23 @@ const styles = StyleSheet.create({
     color: '#29332A',
     lineHeight: rf(22),
     paddingHorizontal: spacing.lg,
-    marginBottom: spacing.lg,
+    marginBottom: spacing.xl,
   },
 
   // ── SE OGSÅ ─────────────────────────────────────────────────────────
   relatedSection: {
     paddingHorizontal: spacing.lg,
-    marginBottom: spacing.lg,
+    marginBottom: spacing.xl,
   },
   relatedTitle: {
     fontFamily: typography.fonts.bodyBold,
     fontSize: rf(15),
     color: '#29332A',
-    marginBottom: spacing.sm,
+    marginBottom: spacing.md,
   },
   relatedCard: {
     flexDirection: 'row',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#F4EFE6',
     borderRadius: radius.lg,
     overflow: 'hidden',
     shadowColor: '#000',
@@ -506,23 +639,32 @@ const styles = StyleSheet.create({
   // ── GALLERI ─────────────────────────────────────────────────────────
   gallerySection: {
     paddingHorizontal: spacing.lg,
-    marginBottom: spacing.lg,
+    marginBottom: spacing.xl,
   },
   sectionTitle: {
-    fontFamily: typography.fonts.bodyBold,
-    fontSize: rf(15),
-    color: '#29332A',
-    marginBottom: spacing.sm,
+    fontFamily: 'RumRaisin_400Regular',
+    fontSize: rf(22),
+    color: '#E5D8A4',
+    marginBottom: spacing.lg,
+    letterSpacing: 0.5,
   },
   galleryRow: {
     flexDirection: 'row',
     gap: spacing.sm,
+  },
+  galleryCardShadow: {
+    flex: 1,
+    borderRadius: radius.lg,
+    boxShadow: '3px 3px 10px rgba(0,0,0,0.28)',
+    elevation: 5,
   },
   galleryCard: {
     flex: 1,
     aspectRatio: 1,
     borderRadius: radius.lg,
     overflow: 'hidden',
+    borderWidth: 1.5,
+    borderColor: 'rgba(255,255,255,0.4)',
   },
   galleryImg: {
     width: '100%',

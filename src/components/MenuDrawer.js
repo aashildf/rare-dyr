@@ -9,6 +9,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const tannhjulSvg = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19.43 12.97C19.47 12.65 19.5 12.33 19.5 12C19.5 11.67 19.47 11.34 19.43 11L21.54 9.37C21.73 9.22 21.78 8.95 21.67 8.72L19.67 5.28C19.56 5.05 19.27 4.96 19.05 5.05L16.56 6.05C16.04 5.66 15.5 5.32 14.87 5.07L14.5 2.42C14.46 2.18 14.25 2 14 2H10C9.75 2 9.54 2.18 9.5 2.42L9.13 5.07C8.5 5.32 7.96 5.66 7.44 6.05L4.95 5.05C4.73 4.96 4.44 5.05 4.33 5.28L2.33 8.72C2.21 8.95 2.27 9.22 2.46 9.37L4.57 11C4.53 11.34 4.5 11.67 4.5 12C4.5 12.33 4.53 12.65 4.57 12.97L2.46 14.63C2.27 14.78 2.21 15.05 2.33 15.28L4.33 18.72C4.44 18.95 4.73 19.03 4.95 18.95L7.44 17.94C7.96 18.34 8.5 18.68 9.13 18.93L9.5 21.58C9.54 21.82 9.75 22 10 22H14C14.25 22 14.46 21.82 14.5 21.58L14.87 18.93C15.5 18.68 16.04 18.34 16.56 17.94L19.05 18.95C19.27 19.03 19.56 18.95 19.67 18.72L21.67 15.28C21.78 15.05 21.73 14.78 21.54 14.63L19.43 12.97ZM12 15.5C10.07 15.5 8.5 13.93 8.5 12C8.5 10.07 10.07 8.5 12 8.5C13.93 8.5 15.5 10.07 15.5 12C15.5 13.93 13.93 15.5 12 15.5Z" fill="#3F4A39"/></svg>`;
 
+const kryssSvg = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 5L19 19M19 5L5 19" stroke="#004D56" stroke-width="2.8" stroke-linecap="round"/></svg>`;
+
 const hengelasSvg = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 8H17V6C17 3.24 14.76 1 12 1C9.24 1 7 3.24 7 6V8H6C4.9 8 4 8.9 4 10V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V10C20 8.9 19.1 8 18 8ZM12 17C10.9 17 10 16.1 10 15C10 13.9 10.9 13 12 13C13.1 13 14 13.9 14 15C14 16.1 13.1 17 12 17ZM15.1 8H8.9V6C8.9 4.29 10.29 2.9 12 2.9C13.71 2.9 15.1 4.29 15.1 6V8Z" fill="#3F4A39"/></svg>`;
 
 function HoverNavItem({ item, onPress }) {
@@ -86,26 +88,26 @@ import { rf, scale } from '../utils/responsive';
 const NAV_ITEMS = [
   {
     label: 'Hjem',
-    icon: require('../../assets/ikoner/hjem_ikonet_fylt.png'),
+    icon: require('../../assets/ikoner/silva_navbar.png'),
     route: 'HjemTab',
     tab: true,
   },
   {
+    label: 'Rare dyr i lufta',
+    icon: require('../../assets/ikoner/luft_navbar.png'),
+    route: 'LuftTab',
+    tab: true,
+  },
+  {
     label: 'Rare dyr på land',
-    icon: require('../../assets/ikoner/land_ikonet_fylt.png'),
+    icon: require('../../assets/ikoner/land_navbar.png'),
     route: 'SkogTab',
     tab: true,
   },
   {
     label: 'Rare dyr i vann',
-    icon: require('../../assets/ikoner/vann_ikonet_fylt.png'),
+    icon: require('../../assets/ikoner/vann_navbar.png'),
     route: 'VannTab',
-    tab: true,
-  },
-  {
-    label: 'Rare dyr i lufta',
-    icon: require('../../assets/ikoner/luft_ikonet_fylt.png'),
-    route: 'LuftTab',
     tab: true,
   },
   {
@@ -172,12 +174,12 @@ export default function MenuDrawer({ visible, onClose, navigation }) {
           routes: [{
             name: 'Main',
             state: {
-              index: ['HjemTab','SkogTab','VannTab','LuftTab'].indexOf(item.route),
+              index: ['HjemTab','LuftTab','SkogTab','VannTab'].indexOf(item.route),
               routes: [
                 { name: 'HjemTab' },
+                { name: 'LuftTab' },
                 { name: 'SkogTab' },
                 { name: 'VannTab' },
-                { name: 'LuftTab' },
               ],
             },
           }],
@@ -228,7 +230,7 @@ export default function MenuDrawer({ visible, onClose, navigation }) {
                 style={styles.closeBtn}
                 hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
               >
-                <Text style={styles.closeText}>✕</Text>
+                <SvgXml xml={kryssSvg} width={scale(18)} height={scale(18)} />
               </TouchableOpacity>
             </View>
 
@@ -325,17 +327,19 @@ const styles = StyleSheet.create({
     aspectRatio: 2,
   },
   closeBtn: {
-    width: scale(36),
-    height: scale(36),
-    backgroundColor: 'rgba(255,255,255,0.12)',
-    borderRadius: radius.full,
+    width: scale(40),
+    height: scale(40),
+    borderRadius: scale(20),
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#E5D8A4',
+    boxShadow: '3px 3px 6px rgba(0,0,0,0.6)',
   },
   closeText: {
-    color: colors.cream,
-    fontSize: rf(16),
+    color: '#004D56',
+    fontSize: rf(22),
     fontFamily: typography.fonts.bodyBold,
+    lineHeight: rf(24),
   },
 
   divider: {

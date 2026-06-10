@@ -3,6 +3,7 @@ import {
   View, Text, Image, FlatList, TouchableOpacity,
   StyleSheet, useWindowDimensions,
 } from 'react-native';
+import * as Speech from 'expo-speech';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, spacing, radius, typography } from '../theme';
@@ -23,7 +24,22 @@ export default function AnimalListScreen({ route, navigation }) {
   const cat        = CATEGORIES[categoryId] ?? CATEGORIES.land;
   const list       = getByCategory(categoryId);
   const { width }  = useWindowDimensions();
-  const [liked, setLiked] = useState({});
+  const [liked, setLiked]       = useState({});
+  const [speaking, setSpeaking] = useState(false);
+
+  const handleSpeak = () => {
+    if (speaking) {
+      Speech.stop();
+      setSpeaking(false);
+    } else {
+      setSpeaking(true);
+      Speech.speak(cat.subtitle, {
+        language: 'nb-NO',
+        onDone:  () => setSpeaking(false),
+        onError: () => setSpeaking(false),
+      });
+    }
+  };
 
   const toggleLike = (id) => setLiked(prev => ({ ...prev, [id]: !prev[id] }));
 
@@ -95,9 +111,9 @@ export default function AnimalListScreen({ route, navigation }) {
         <AppHeader navigation={navigation} logo={cat.logo} />
 
         {/* Panel med rett kant øverst, marg mot gradienten */}
-        <View style={[styles.panel, { backgroundColor: cat.panelColor, marginHorizontal: 6 }]}>
+        <View style={[styles.panel, { backgroundColor: cat.panelColor, marginHorizontal: spacing.lg }]}>
 
-          {/* Overskrift inni panelet */}
+          {/* Kun overskrift + knapper er sticky */}
           <View style={styles.header}>
             <View style={styles.headerTop}>
               <TouchableOpacity
@@ -112,10 +128,18 @@ export default function AnimalListScreen({ route, navigation }) {
                 />
               </TouchableOpacity>
               <Text style={styles.headerTitle}>{cat.heading}</Text>
+              <TouchableOpacity
+                style={[styles.speakCircle, speaking && styles.speakCircleActive]}
+                onPress={handleSpeak}
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              >
+                <Image
+                  source={require('../../assets/ikoner/lyd_symbol.png')}
+                  style={styles.speakIcon}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
             </View>
-            <Text style={[styles.headerSub, { color: cat.textColor, opacity: 0.75 }]}>
-              {cat.subtitle}
-            </Text>
           </View>
 
           <FlatList
@@ -124,6 +148,11 @@ export default function AnimalListScreen({ route, navigation }) {
             renderItem={renderItem}
             contentContainerStyle={styles.list}
             showsVerticalScrollIndicator={false}
+            ListHeaderComponent={
+              <Text style={[styles.headerSub, { color: cat.textColor }]}>
+                {cat.subtitle}
+              </Text>
+            }
             ListFooterComponent={<DiscoveryWidget cat={cat} total={list.length} found={list.filter(a => a.discovered).length} />}
             ListEmptyComponent={
               <Text style={[styles.empty, { color: cat.textColor }]}>Ingen dyr her ennå</Text>
@@ -157,13 +186,15 @@ const styles = StyleSheet.create({
 
   panel: {
     flex: 1,
+    borderTopLeftRadius: radius.xl,
+    borderTopRightRadius: radius.xl,
     overflow: 'hidden',
   },
 
   header: {
     paddingHorizontal: 24,
     paddingTop: spacing.xl,
-    paddingBottom: spacing.lg,
+    paddingBottom: spacing.md,
   },
   headerTop: {
     flexDirection: 'row',
@@ -175,22 +206,20 @@ const styles = StyleSheet.create({
     width: scale(40),
     height: scale(40),
     borderRadius: scale(20),
-    borderWidth: 2,
-    borderColor: '#E5D8A4',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.35)',
-    boxShadow: '0px 0px 8px rgba(0,0,0,0.7)',
+    backgroundColor: '#E5D8A4',
+    boxShadow: '3px 3px 6px rgba(0,0,0,0.6)',
   },
   backArrow: {
     width: scale(18),
     height: scale(18),
-    tintColor: '#E5D8A4',
+    tintColor: '#004D56',
   },
   headerTitle: {
     fontFamily: 'RumRaisin_400Regular',
-    fontSize: 40,
-    lineHeight: 48,
+    fontSize: 34,
+    lineHeight: 42,
     color: '#E5D8A4',
     textShadow: '0px 2px 8px rgba(0,0,0,0.6)',
     WebkitTextStrokeWidth: '1px',
@@ -199,7 +228,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   headerSub: {
-    fontFamily: 'Quicksand_400Regular',
+    fontFamily: 'Quicksand_600SemiBold',
     fontSize: rf(18),
     lineHeight: rf(26),
     opacity: 1,
@@ -375,5 +404,23 @@ const styles = StyleSheet.create({
     color: colors.cream,
     textAlign: 'center',
     marginTop: spacing.xxl,
+  },
+
+  speakCircle: {
+    width: scale(36),
+    height: scale(36),
+    borderRadius: scale(18),
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#E5D8A4',
+    boxShadow: '3px 3px 6px rgba(0,0,0,0.6)',
+  },
+  speakCircleActive: {
+    backgroundColor: '#fff',
+  },
+  speakIcon: {
+    width: scale(16),
+    height: scale(16),
+    tintColor: '#004D56',
   },
 });

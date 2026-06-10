@@ -2,45 +2,57 @@ import React from 'react';
 import { View, Image, TouchableOpacity, StyleSheet } from 'react-native';
 
 const TABS = [
-  { icon: require('../../assets/ikoner/hjem_ikonet_fylt.png'),   route: 'HjemTab',  tabIndex: 0 },
-  { icon: require('../../assets/ikoner/land_ikonet_fylt.png'),   route: 'SkogTab',  tabIndex: 1 },
-  { icon: require('../../assets/ikoner/vann_ikonet_fylt.png'),   route: 'VannTab',  tabIndex: 2 },
-  { icon: require('../../assets/ikoner/luft_ikonet_fylt.png'),   route: 'LuftTab',  tabIndex: 3 },
+  { icon: require('../../assets/ikoner/silva_navbar.png'), route: 'HjemTab',  tabIndex: 0 },
+  { icon: require('../../assets/ikoner/luft_navbar.png'),  route: 'LuftTab',  tabIndex: 1 },
+  { icon: require('../../assets/ikoner/land_navbar.png'),  route: 'SkogTab',  tabIndex: 2 },
+  { icon: require('../../assets/ikoner/vann_navbar.png'),  route: 'VannTab',  tabIndex: 3 },
 ];
 
-export default function TabBar({ navigation, activeTab }) {
-  const goTo = (tabIndex) => {
-    navigation.reset({
-      index: 0,
-      routes: [{
-        name: 'Main',
-        state: {
-          index: tabIndex,
-          routes: [
-            { name: 'HjemTab' },
-            { name: 'SkogTab' },
-            { name: 'VannTab' },
-            { name: 'LuftTab' },
-          ],
-        },
-      }],
-    });
+export default function TabBar({ navigation, activeTab, state }) {
+  const currentActive = state ? state.routes[state.index]?.name : activeTab;
+
+  const CATEGORY_TABS = ['LuftTab', 'SkogTab', 'VannTab'];
+
+  const goTo = (tab) => {
+    if (state) {
+      if (CATEGORY_TABS.includes(tab.route)) {
+        navigation.navigate(tab.route, { screen: 'DyrListe' });
+      } else {
+        navigation.navigate(tab.route);
+      }
+    } else {
+      navigation.reset({
+        index: 0,
+        routes: [{
+          name: 'Main',
+          state: {
+            index: tab.tabIndex,
+            routes: [
+              { name: 'HjemTab' },
+              { name: 'LuftTab' },
+              { name: 'SkogTab' },
+              { name: 'VannTab' },
+            ],
+          },
+        }],
+      });
+    }
   };
 
   return (
     <View style={styles.wrapper}>
       <View style={styles.pill}>
         <View style={styles.pillBg} />
-        {TABS.map((tab, i) => (
+        {TABS.map((tab) => (
           <TouchableOpacity
             key={tab.route}
             style={styles.item}
-            onPress={() => goTo(tab.tabIndex)}
+            onPress={() => goTo(tab)}
             activeOpacity={0.7}
           >
             <Image
               source={tab.icon}
-              style={[styles.icon, activeTab === tab.route && styles.iconActive]}
+              style={[styles.icon, currentActive === tab.route && styles.iconActive]}
               resizeMode="contain"
             />
           </TouchableOpacity>
@@ -80,6 +92,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'stretch',
+    backgroundColor: 'transparent',
   },
   icon: {
     width: 68,

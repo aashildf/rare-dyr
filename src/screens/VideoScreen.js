@@ -113,6 +113,9 @@ export default function VideoScreen({ route, navigation }) {
       <SafeAreaView style={styles.safeArea}>
         <AppHeader navigation={navigation} />
 
+        {/* Ytre wrapper — avrundet øverst */}
+        <View style={styles.outerPanel}>
+
         {/* Navfelt — X + dyrenavn */}
         <View style={styles.navBar}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.closeBtn}>
@@ -123,7 +126,7 @@ export default function VideoScreen({ route, navigation }) {
         </View>
 
         {/* Panel */}
-        <View style={[styles.panel, { backgroundColor: cat.panelColor, marginHorizontal: 6 }]}>
+        <View style={styles.panel}>
           <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
 
             {/* Videospiller */}
@@ -161,50 +164,34 @@ export default function VideoScreen({ route, navigation }) {
             </View>
 
             {/* Tittel */}
-            <Text style={[styles.videoTitle, { color: cat.textColor }]}>
+            <Text style={styles.videoTitle}>
               Møt {definitForm(animal.animalType)}{'\n'}{animal.name}
             </Text>
 
             {/* Beskrivelse */}
-            {animal.moreInfo && (
-              <Text style={[styles.description, { color: cat.textColor }]}>{animal.moreInfo}</Text>
+            {(animal.videoDescription || animal.moreInfo) && (
+              <Text style={styles.description}>{animal.videoDescription ?? animal.moreInfo}</Text>
             )}
 
-            {/* Tags + hjerte */}
-            <View style={styles.tagsRow}>
-              <View style={styles.tags}>
-                {tags.map((tag, i) => (
-                  <View key={i} style={styles.tag}>
-                    <Text style={styles.tagText} numberOfLines={1}>{tag}</Text>
-                  </View>
-                ))}
-              </View>
-              <TouchableOpacity>
-                <Text style={styles.heart}>♡</Text>
+            {/* LAGRE + hjerte */}
+            <View style={styles.actionRow}>
+              <TouchableOpacity style={styles.lagreBtn}>
+                <Text style={styles.lagreBookmark}>⊟</Text>
+                <Text style={styles.lagreTxt}>LAGRE</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.heartBtn}>
+                <Image
+                  source={require('../../assets/svg/like_hjerte.svg')}
+                  style={styles.heartImg}
+                  resizeMode="contain"
+                />
               </TouchableOpacity>
             </View>
-
-            {/* LAGRE-knapp */}
-            <TouchableOpacity style={styles.lagreBtn}>
-              <Image source={require('../../assets/ikoner/lyd_symbol.png')} style={styles.lagreIcon} resizeMode="contain" />
-              <Text style={styles.lagreTxt}>LAGRE</Text>
-            </TouchableOpacity>
-
-            {/* Utforsk flere dyr */}
-            {related.length > 0 && (
-              <View style={styles.relSection}>
-                <Text style={[styles.relTitle, { color: cat.textColor }]}>Utforsk flere dyr</Text>
-                <View style={styles.relGrid}>
-                  {related.map(a => (
-                    <RelatedCard key={a.id} animal={a} navigation={navigation} half={halfCard} />
-                  ))}
-                </View>
-              </View>
-            )}
 
             <View style={{ height: spacing.xxl }} />
           </ScrollView>
         </View>
+        </View>{/* ytre wrapper */}
       </SafeAreaView>
     </LinearGradient>
   );
@@ -213,7 +200,15 @@ export default function VideoScreen({ route, navigation }) {
 const styles = StyleSheet.create({
   gradient: { flex: 1 },
   safeArea: { flex: 1 },
-  panel:    { flex: 1, overflow: 'hidden' },
+  outerPanel: {
+    flex: 1,
+    marginHorizontal: spacing.lg,
+    borderTopLeftRadius: radius.xl,
+    borderTopRightRadius: radius.xl,
+    overflow: 'hidden',
+    backgroundColor: '#F4EFE6',
+  },
+  panel: { flex: 1, overflow: 'hidden', backgroundColor: '#F4EFE6' },
 
   // Nav
   navBar: {
@@ -223,7 +218,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     height: 64,
     paddingHorizontal: 20,
-    marginHorizontal: 6,
   },
   closeBtn:  { padding: spacing.xs },
   closeText: { fontSize: rf(18), color: '#004D56', fontWeight: '600' },
@@ -308,52 +302,51 @@ const styles = StyleSheet.create({
     fontSize: 28,
     lineHeight: 36,
     marginBottom: spacing.md,
+    color: '#29332A',
   },
   description: {
     fontFamily: 'Quicksand_400Regular',
     fontSize: rf(14),
     lineHeight: rf(22),
     marginBottom: spacing.lg,
-    opacity: 0.9,
+    color: '#29332A',
+    opacity: 0.85,
   },
 
-  // Tags
-  tagsRow: {
+  actionRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: spacing.lg,
-    flexWrap: 'wrap',
-    gap: spacing.xs,
+    gap: spacing.md,
+    marginBottom: spacing.xl,
   },
-  tags: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.xs, flex: 1 },
-  tag: {
-    height: 28,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 8,
-    backgroundColor: 'rgba(130, 160, 150, 0.25)',
+  heartBtn: {
+    width: scale(52),
+    height: scale(52),
     justifyContent: 'center',
+    alignItems: 'center',
   },
-  tagText: {
-    fontFamily: 'Quicksand_600SemiBold',
-    fontSize: rf(12),
-    color: '#005138',
+  heartImg: {
+    width: 48,
+    height: 42,
+    opacity: 0.5,
   },
-  heart: { fontSize: rf(28), color: colors.primary, opacity: 0.4 },
+  lagreBookmark: { fontSize: rf(20), color: '#fff' },
 
   // Lagre-knapp
   lagreBtn: {
+    flex: 1,
     flexDirection: 'row',
-    paddingVertical: 24,
+    paddingVertical: spacing.lg,
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 16,
-    borderRadius: 24,
-    borderWidth: 1,
-    borderColor: '#FAF9F5',
+    gap: spacing.md,
+    borderRadius: radius.xl,
     backgroundColor: '#004D56',
-    marginBottom: spacing.xl,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 5,
   },
   lagreIcon: { width: scale(22), height: scale(22), tintColor: '#fff' },
   lagreTxt: {

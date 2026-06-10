@@ -5,9 +5,9 @@ export const CATEGORIES = {
     heading: "Rare dyr på land",
     dyreord: "landdyr",
     subtitle:
-      "Oppdag de mest fantastiske skapningene som vandrer på planeten vår.",
+      "Bli med på oppdagelsesferd! I skoger, jungler, savanner, ørkener og fjell lever dyr som du knapt kan tro eksisterer. Noen har lange tunger, andre har rare horn eller merkelige farger. De er alle unike og fascinerende på sin egen måte. Er du klar til å utforske og bli kjent med de rare dyrene som bor på land?",
     logo: require("../../assets/logo/rare_dyr_logo_silva_land.png"),
-    color: "#798447",
+    color: "#3F4A39",
     panelColor: "#29332A",
     gradient: ["#29332A", "#29332A", "#546A57", "#79997D", "#79997D"],
     gradientLocations: [0, 0.5708, 0.7538, 0.9311, 1],
@@ -21,7 +21,8 @@ export const CATEGORIES = {
     label: "vann",
     heading: "Rare dyr i vann",
     dyreord: "vanndyr",
-    subtitle: "Underlige skapninger som lever i sjø, elver og dammer.",
+    subtitle:
+      "Hei lille utforsker! Dypt under overflaten og i små bekker skjuler det seg en verden full av overraskelser. Møt rare, vakre og spennende dyr som lever sine liv i vann. Under overflaten venter skapninger som er merkeligere enn alt du har drømt om. Er du klar til å dykke?",
     logo: require("../../assets/logo/rare_dyr_logo_silva_vann.png"),
     color: "#004D56",
     panelColor: "#004D56",
@@ -37,14 +38,15 @@ export const CATEGORIES = {
     label: "lufta",
     heading: "Rare dyr i lufta",
     dyreord: "luftdyr",
-    subtitle: "Bevingede skapninger som flyr høyt og lavt.",
+    subtitle:
+      "Løft blikket og se opp! Over trær, fjell og blomster flyr skapninger som virker nesten magiske. Noen er raske som lynet, andre glir stille gjennom luften. Her kan du bli kjent med naturens fantastiske flygere. Er du klar til å ta av og utforske himmelens hemmeligheter?",
     logo: require("../../assets/logo/rare_dyr_logo_silva_luft.png"),
     color: "#3A657A",
     panelColor: "#B5C1C9",
-    gradient: ["#2C4F61", "#2C4F61", "#3A657A", "#6496AE", "#6496AE"],
-    gradientLocations: [0, 0.4108, 0.7713, 0.914, 1],
-    gradientStart: { x: 1, y: 0.8 },
-    gradientEnd: { x: 0, y: 0.2 },
+    gradient: ["#E4EFF7", "#9DC0D8", "#4A88A8", "#236080"],
+    gradientLocations: [0, 0.15, 0.42, 1],
+    gradientStart: { x: 0, y: 0 },
+    gradientEnd: { x: 1, y: 1 },
     textColor: "#29332A",
     silva: require("../../assets/silva/silva_luft.png"),
   },
@@ -80,6 +82,7 @@ export const animals = [
     ],
     habitatImage: null,
     audioFact: null,
+    videoDescription: "På denne videoen ser vi en tarsier som hopper mellom greiner i den mørke skogen om natten. Se de enorme øynene som lyser opp i mørket — og legg merke til hvordan den snur hele hodet rundt for å se seg om!",
     image: require("../../assets/animals/land/tarsi.png"),
     subImages: [
       require("../../assets/animals/land/tarsi_hand.png"),
@@ -120,6 +123,7 @@ export const animals = [
     ],
     habitatImage: null,
     audioFact: null,
+    videoDescription: "På denne videoen ser vi en pangolin som bruker den lange, klebrige tungen til å slurpe til seg maur fra en tue. Legg merke til de harde skjellene som dekker hele kroppen — nesten som en levende rustning!",
     image: require("../../assets/animals/land/pangolin.png"),
     subImages: [
       require("../../assets/animals/land/pangolin_detalj_hode.png"),
@@ -162,6 +166,7 @@ export const animals = [
     ],
     habitatImage: null,
     audioFact: null,
+    videoDescription: "På denne videoen ser vi en fossa som klatrer lynraskt ned et tre med hodet først — noe svært få dyr kan. Deretter sniker den seg stille langs skogbunnen på jakt etter lemurer.",
     image: require("../../assets/animals/land/fossa.png"),
     subImages: [
       require("../../assets/animals/land/fossa_hode.png"),
@@ -204,6 +209,7 @@ export const animals = [
     ],
     habitatImage: null,
     audioFact: null,
+    videoDescription: "På denne videoen ser vi en okapi som bruker den lange, blåaktige tungen til å plukke blader fra trær i regnskogen. Se stripene på bena skinne i lyset som siver gjennom den tette skogen!",
     image: require("../../assets/animals/land/okapi.png"),
     subImages: [
       require("../../assets/animals/land/okapi_detalj.png"),
@@ -246,6 +252,7 @@ export const animals = [
     ],
     habitatImage: null,
     audioFact: null,
+    videoDescription: "På denne videoen ser vi en glassfrosk som sitter på undersiden av et blad — og vi kan se rett gjennom den! Se det lille hjertet slå inne i den gjennomsiktige kroppen.",
     image: require("../../assets/animals/land/glassfrosk.png"),
     subImages: [
       require("../../assets/animals/land/glassfrosk_detalj.png"),
@@ -286,6 +293,7 @@ export const animals = [
     ],
     habitatImage: null,
     audioFact: null,
+    videoDescription: "På denne videoen ser vi en stjerne-nese-muldvarp som bruker de 22 tentaklene på nesen til å finne og svelge mat på under et halvt sekund — raskere enn øyet kan følge!",
     image: require("../../assets/animals/land/moldvarp.png"),
     subImages: [
       require("../../assets/animals/land/moldvarp_haand.png"),
@@ -324,6 +332,7 @@ export const animals = [
     ],
     habitatImage: null,
     audioFact: null,
+    videoDescription: "På denne videoen ser vi et aye-aye som banker på barken med den lange midtfingeren og lytter nøye. Plutselig stikker den fingeren inn i et hull i treet og fisker ut en saftig larve!",
     image: require("../../assets/animals/land/aye_aye.png"),
     subImages: [
       require("../../assets/animals/land/aye_aye_finger.png"),
@@ -367,6 +376,7 @@ export const animals = [
     ],
     habitatImage: null,
     audioFact: null,
+    videoDescription: "På denne videoen ser vi en bladhalet gekko sitte helt stille på en tregren — det er nesten umulig å se den! Kameraet zoomer sakte inn, og plutselig oppdager vi den perfekt kamuflerte gekkoen.",
     image: require("../../assets/animals/land/bladhalet_gekko.png"),
     video: null,
     discovered: false,
@@ -406,6 +416,7 @@ export const animals = [
     ],
     habitatImage: null,
     audioFact: null,
+    videoDescription: "På denne videoen ser vi en koloni nakne muldvarpmus som jobber i tunnelene sine under bakken. Dronningen, som er mye større enn de andre, styrer det hele fra midten av kolonien.",
     image: require("../../assets/animals/land/nakne_muldvarp_rotter.png"),
     video: null,
     discovered: false,
@@ -445,6 +456,7 @@ export const animals = [
     ],
     habitatImage: null,
     audioFact: null,
+    videoDescription: "På denne videoen ser vi en flokk saiga-antiloper galoppere over den enorme, åpne steppen. Se den rare, hengende nesen — den fungerer som filter og varmer kald luft om vinteren!",
     image: require("../../assets/animals/land/saiga_antilope.png"),
     video: null,
     discovered: false,
@@ -486,6 +498,7 @@ export const animals = [
     ],
     habitatImage: null,
     audioFact: null,
+    videoDescription: "På denne videoen ser vi en aksolotl svømme rolig rundt med de vakre, fjærliknende gjellene vaiende rundt hodet. Vi ser også noe utrolig — et nytt bein som langsomt vokser ut!",
     image: require("../../assets/animals/vann/axolotl.png"),
     subImages: [
       require("../../assets/animals/vann/axolotl_detalj.png"),
@@ -529,6 +542,7 @@ export const animals = [
     ],
     habitatImage: null,
     audioFact: null,
+    videoDescription: "På denne videoen ser vi en blobfisk på dypt havvann — der ser den faktisk ganske normal ut! Det er først når den hales opp til overflaten at den berømte, trist-utseende «blob»-formen viser seg.",
     image: require("../../assets/animals/vann/blob_fisk.png"),
     subImages: [
       require("../../assets/animals/vann/blob_fisk_detalj.png"),
@@ -572,6 +586,7 @@ export const animals = [
     ],
     habitatImage: null,
     audioFact: null,
+    videoDescription: "På denne videoen ser vi narhvaler bryte gjennom isen i Arktis for å puste. En hann løfter den spiralformede tannen sin høyt over vannflaten — den er nesten tre meter lang!",
     image: require("../../assets/animals/vann/narhval.png"),
     subImages: [
       require("../../assets/animals/vann/narhval_hopp.png"),
@@ -615,6 +630,7 @@ export const animals = [
     ],
     habitatImage: null,
     audioFact: null,
+    videoDescription: "På denne videoen ser vi en dumbo-blekksprut dypt nede i havet som flapper de store, ørliknende finnene sine som en fugl. Den svever elegant og stille gjennom det mørke dyphavet.",
     image: require("../../assets/animals/vann/dumbo_blekksprut.png"),
     subImages: [
       require("../../assets/animals/vann/dumbo_blekksprut_arm.png"),
@@ -659,6 +675,7 @@ export const animals = [
     ],
     habitatImage: null,
     audioFact: null,
+    videoDescription: "På denne videoen ser vi en mantisreke smadre et muslingskall med ett enkelt slag — bevegelsen er så rask at den nesten ikke synes. Vi ser også de fantastiske regnbuefargene på skallet!",
     image: require("../../assets/animals/vann/mantisreke.png"),
     subImages: [
       require("../../assets/animals/vann/mantisreke_klo.png"),
@@ -703,6 +720,7 @@ export const animals = [
     ],
     habitatImage: null,
     audioFact: null,
+    videoDescription: "På denne videoen ser vi en sjødrage som sakte driver langs korallrevet — ser den ut som levende tang? Det er nesten umulig å skille den fra plantene rundt. Vi ser også pappasjen som bærer egg under halen!",
     image: require("../../assets/animals/vann/sjodrage.png"),
     subImages: [
       require("../../assets/animals/vann/sjodrage_finne.png"),
@@ -748,6 +766,7 @@ export const animals = [
     ],
     habitatImage: null,
     audioFact: null,
+    videoDescription: "På denne videoen ser vi en vampyrblekksprut slå kappen ut over seg selv i mørket og lyse opp med selvlysende organer. Det ser ut som noe rett fra en skummel eventyrfilm!",
     image: require("../../assets/animals/vann/vampyrblekksprut.png"),
     subImages: [
       require("../../assets/animals/vann/vampyrblekksprut_detalj.png"),
@@ -791,6 +810,7 @@ export const animals = [
     ],
     habitatImage: null,
     audioFact: null,
+    videoDescription: "På denne videoen ser vi verdens tyngste beinfisk svømme rolig nær overflaten. Størrelsen er nesten ikke til å tro — månefisken er like stor som en liten bil!",
     image: require("../../assets/animals/vann/maanefisk.png"),
     subImages: [
       require("../../assets/animals/vann/maanefisk_finne.png"),
@@ -834,6 +854,7 @@ export const animals = [
     ],
     habitatImage: null,
     audioFact: null,
+    videoDescription: "På denne videoen ser vi en yeti-krabbe vaie armene frem og tilbake ved et varmt havkilde på havbunnen. Den ser ut som den danser — men den dyrker egentlig bakteriene som er middagen dens!",
     image: null,
     video: null,
     discovered: false,
@@ -868,6 +889,7 @@ export const animals = [
     ],
     habitatImage: null,
     audioFact: null,
+    videoDescription: "På denne videoen ser vi en kolibri henge helt stille i luften foran en blomst — vingene slår så raskt at de bare er en sløret ring. Se tungen stikke inn for å nippe den søte nektaren!",
     image: require("../../assets/animals/luft/kolibri.png"),
     subImages: [
       require("../../assets/animals/luft/kolibri_hode.png"),
@@ -910,6 +932,7 @@ export const animals = [
     ],
     habitatImage: null,
     audioFact: null,
+    videoDescription: "På denne videoen ser vi en kakapo som vandrer rolig rundt på bakken og snuser på planter. Den prøver å klatre opp i et tre, men gir fort opp — det er ikke akkurat dens sterke side!",
     image: require('../../assets/animals/luft/kakapo.png'),
     video: null,
     discovered: false,
@@ -949,6 +972,7 @@ export const animals = [
     ],
     habitatImage: null,
     audioFact: null,
+    videoDescription: "På denne videoen ser vi en sekretærfugl sparke en slange i hodet med et lynraskt spark. Benet beveger seg så fort at slangen ikke rekker å reagere — det er den kraftigste sparketeknikken i fugleriket!",
     image: require("../../assets/animals/luft/sekretaerfugl.png"),
     subImages: [
       require("../../assets/animals/luft/sekretaerfugl_i_sprang.png"),
@@ -992,6 +1016,7 @@ export const animals = [
     ],
     habitatImage: null,
     audioFact: null,
+    videoDescription: "På denne videoen ser vi en flokk flygende hunder henge opp-ned i trærne mens solen går ned. Plutselig letter de alle på en gang — med nesten halvannen meters vingespenn er synet utrolig!",
     image: require("../../assets/animals/luft/flygende_hund.png"),
     subImages: [
       require("../../assets/animals/luft/flygende_hund_fot.png"),
@@ -1028,6 +1053,7 @@ export const animals = [
     ],
     habitatImage: null,
     audioFact: null,
+    videoDescription: "På denne videoen ser vi en glassvingsommerfugl fly gjennom regnskogen — kroppen svever i luften, men de gjennomsiktige vingene er nesten usynlige! En magisk demonstrasjon av naturens mesterverk.",
     image: require("../../assets/animals/luft/glassvinge_sommerfugl.png"),
     subImages: [
       require("../../assets/animals/luft/greta_oto.png"),
@@ -1064,6 +1090,7 @@ export const animals = [
     ],
     habitatImage: null,
     audioFact: null,
+    videoDescription: "På denne videoen ser vi en hannlyrefugl åpne den vakre, vifteformede halen sin og begynne å synge. Men hør nøye — er det lyden av en motorsag og et kamera vi hører? Jo, det er lyrefuglen som imiterer!",
     image: require("../../assets/animals/luft/lyrefugl.png"),
     subImages: [
       require("../../assets/animals/luft/lyrefugl_fjaer.png"),

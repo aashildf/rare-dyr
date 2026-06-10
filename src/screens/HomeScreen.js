@@ -192,11 +192,11 @@ export default function HomeScreen({ navigation }) {
             <View style={styles.gameRow}>
               {[
                 {
-                  src: require("../../assets/animalquiz.png"),
+                  src: require("../../assets/quiz.jpg"),
                   label: "Dyrequiz",
                 },
                 {
-                  src: require("../../assets/dyrespor.png"),
+                  src: require("../../assets/dyrespor2.png"),
                   label: "Finn sporene",
                 },
               ].map(({ src, label }) => (

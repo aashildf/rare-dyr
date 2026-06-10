@@ -3,6 +3,7 @@ import {
   View, Image, TouchableOpacity, StyleSheet,
   Animated, Text, useWindowDimensions,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const EGG_SPARKLES = [
   { dx: -55, dy: -60, size: 8,  color: '#E5D8A4', delay: 0,   period: 1100 },
@@ -63,20 +64,20 @@ import { useAudioPlayer, setAudioModeAsync } from 'expo-audio';
 import { LinearGradient } from 'expo-linear-gradient';
 import { colors, spacing, radius, typography } from '../theme';
 import { scale, rf } from '../utils/responsive';
-import MenuDrawer from '../components/MenuDrawer';
+import AppHeader from '../components/AppHeader';
 import TabBar from '../components/TabBar';
 
 const ICON_SOURCES = [
-  { label: 'Luft', icon: require('../../assets/ikoner/luft_ikonet_fylt.png'), category: 'luft', tabIndex: 3, xPct: 0.15, yPct: 0.28 },
-  { label: 'Land', icon: require('../../assets/ikoner/land_ikonet_fylt.png'), category: 'land', tabIndex: 1, xPct: 0.50, yPct: 0.18 },
-  { label: 'Vann', icon: require('../../assets/ikoner/vann_ikonet_fylt.png'), category: 'vann', tabIndex: 2, xPct: 0.85, yPct: 0.28 },
+  { label: 'Luft', icon: require('../../assets/ikoner/luft_ikonet_fylt.png'), category: 'luft', tabIndex: 1, xPct: 0.15, yPct: 0.28 },
+  { label: 'Land', icon: require('../../assets/ikoner/land_ikonet_fylt.png'), category: 'land', tabIndex: 2, xPct: 0.50, yPct: 0.18 },
+  { label: 'Vann', icon: require('../../assets/ikoner/vann_ikonet_fylt.png'), category: 'vann', tabIndex: 3, xPct: 0.85, yPct: 0.28 },
 ];
 
 export default function IntroScreen({ navigation }) {
   const { width, height } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
   const iconSize = Math.round(width * 0.22); // ~22% av skjermbredden
-  const [phase, setPhase]       = useState('paused');
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [phase, setPhase] = useState('paused');
   const audioPlayer = useAudioPlayer(require('../../assets/audio/silva_intro.m4a'));
 
   useEffect(() => {
@@ -189,9 +190,9 @@ export default function IntroScreen({ navigation }) {
           index: tabIndex,
           routes: [
             { name: 'HjemTab' },
+            { name: 'LuftTab' },
             { name: 'SkogTab' },
             { name: 'VannTab' },
-            { name: 'LuftTab' },
           ],
         },
       }],
@@ -217,7 +218,9 @@ export default function IntroScreen({ navigation }) {
         pointerEvents="none"
       />
 
-      <TopBar onMenuPress={() => setMenuOpen(true)} />
+      <View style={[styles.headerArea, { top: insets.top }]}>
+        <AppHeader navigation={navigation} />
+      </View>
 
       {/* Tap-overlay — synlig når pauset */}
       {phase === 'paused' && (
@@ -240,12 +243,6 @@ export default function IntroScreen({ navigation }) {
           <Text style={styles.skipText}>Hopp over</Text>
         </TouchableOpacity>
       )}
-
-      <MenuDrawer
-        visible={menuOpen}
-        onClose={() => setMenuOpen(false)}
-        navigation={navigation}
-      />
 
       <TabBar navigation={navigation} activeTab="HjemTab" />
 
@@ -338,34 +335,9 @@ function SparkleRing({ iconSize, visible }) {
   );
 }
 
-function TopBar({ onMenuPress }) {
-  const { width } = useWindowDimensions();
-  const logoW    = Math.min(width * 0.48, 220);
-  const menuSize = Math.max(Math.min(width * 0.09, 48), 36);
-  return (
-    <View style={styles.topBar}>
-      <Image
-        source={require('../../assets/logo/rare_dyr_logo_silva_land.png')}
-        style={{ width: logoW, height: logoW / 2 }}
-        resizeMode="contain"
-      />
-      <TouchableOpacity
-        onPress={onMenuPress}
-        hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-      >
-        <Image
-          source={require('../../assets/meny.png')}
-          style={{ width: menuSize, height: menuSize }}
-          resizeMode="contain"
-        />
-      </TouchableOpacity>
-    </View>
-  );
-}
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#000' },
-  video:     { flex: 1 },
 
   scrimTop: {
     position: 'absolute',
@@ -384,25 +356,13 @@ const styles = StyleSheet.create({
     zIndex: 5,
   },
 
-  // Topp-bar — prosentbasert fra toppen
-  topBar: {
+  video: { flex: 1 },
+
+  headerArea: {
     position: 'absolute',
-    top: '6%',
-    left: spacing.lg,
-    right: spacing.lg,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    left: 0,
+    right: 0,
     zIndex: 10,
-  },
-  menuButton: {
-    backgroundColor: 'rgba(255,255,255,0.15)',
-    borderRadius: radius.sm,
-    padding: spacing.sm,
-  },
-  menuButtonText: {
-    color: colors.cream,
-    lineHeight: rf(28),
   },
 
   // Egg-peker
