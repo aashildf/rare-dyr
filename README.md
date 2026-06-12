@@ -26,6 +26,8 @@ Jeg startet med å utforske idéen visuelt:
 
 -fokus på tydelige former, store elementer og barnlig nysgjerrighet
 
+![Figma-planlegging](assets/readme_skjermdumper/Figma_planning.png)
+
 Figma‑fil: (...)
 
 ## Utvikling i VS Code
@@ -36,6 +38,8 @@ Dette er min første mobilapp, og jeg har jobbet med:
 -komponentstruktur og navigasjon
 
 -bildehåndtering og layout
+
+![Skjermdump fra appen](assets/readme_skjermdumper/actual_app_screenpicture.png)
 
 
 
