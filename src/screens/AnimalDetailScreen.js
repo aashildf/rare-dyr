@@ -131,12 +131,16 @@ export default function AnimalDetailScreen({ route, navigation }) {
             <View style={{ width: 32 }} />
           </View>
 
-          {/* INDRE PANEL — innholdsflaten */}
-          <View style={[styles.panel, { backgroundColor: cat.color }]}>
-            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
+          {/* INNHOLDSFLATEN */}
+          <ScrollView
+            style={[styles.panel, { backgroundColor: cat.color }]}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.scroll}
+            nestedScrollEnabled={true}
+          >
 
             {/* BILDE MED NAVN-OVERLAY */}
-            <View style={[styles.imageBox, { height: width * 0.72, marginTop: spacing.md, marginHorizontal: spacing.md }]}>
+            <View style={[styles.imageBox, { height: width * 0.72, marginTop: spacing.xl, marginHorizontal: spacing.lg }]}>
               {animal.image
                 ? <Image source={animal.image} style={styles.fillImage} resizeMode="cover" />
                 : <View style={[styles.imagePlaceholder, { backgroundColor: cat.color + '44' }]}>
@@ -181,15 +185,15 @@ export default function AnimalDetailScreen({ route, navigation }) {
             {/* FAKTAGRID — 2 kolonner */}
             <View style={styles.factGrid}>
               <View style={styles.factRow}>
-                <FactCard label="Størrelse" value={animal.size}   icon={require('../../assets/ikoner/storrelse.png')} level={parseSizeLevel(animal.size)}   levelColor="#798447" color="#FDF5D7" />
-                <FactCard label="Vekt"      value={animal.weight} icon={require('../../assets/ikoner/vekt.png')}      level={parseWeightLevel(animal.weight)} levelColor="#798447" color="#E9F9F3" />
+                <FactCard label="Størrelse" value={animal.size}   icon={require('../../assets/ikoner/storrelse.png')} level={parseSizeLevel(animal.size)}   levelColor="#798447" />
+                <FactCard label="Vekt"      value={animal.weight} icon={require('../../assets/ikoner/vekt.png')}      level={parseWeightLevel(animal.weight)} levelColor="#798447" />
               </View>
               <View style={styles.factRow}>
-                <FactCard label="Hvor lever den?" value={animal.location} icon={require('../../assets/ikoner/levested.png')} color="#E3F6FF" />
-                <FactCard label="Hva spiser den?" value={animal.diet}     icon={require('../../assets/ikoner/spiser.png')}   color="#FFF1E5" />
+                <FactCard label="Hvor lever den?" value={animal.location} icon={require('../../assets/ikoner/levested.png')} />
+                <FactCard label="Hva spiser den?" value={animal.diet}     icon={require('../../assets/ikoner/spiser.png')} />
               </View>
               <View style={styles.factRow}>
-                <FactCard label="Sporene" value={animal.tracks} icon={require('../../assets/ikoner/spor.png')} color="#BAC0C8" />
+                <FactCard label="Sporene" value={animal.tracks} icon={require('../../assets/ikoner/spor.png')} />
                 {/* Dag eller natt */}
                 {(() => {
                   const t    = (animal.activeTime ?? '').toLowerCase();
@@ -260,6 +264,14 @@ export default function AnimalDetailScreen({ route, navigation }) {
               <Text style={[styles.moreInfoText, { color: cat.textColor }]}>{animal.moreInfo}</Text>
             )}
 
+            {/* NOEL Å UNDRE SEG OVER */}
+            {animal.wonderQuestion && (
+              <View style={styles.wonderCard}>
+                <Text style={styles.wonderTitle}>🌟 Noe å undre seg over</Text>
+                <Text style={styles.wonderText}>{animal.wonderQuestion}</Text>
+              </View>
+            )}
+
             {/* SE OGSÅ */}
             {animal.related?.length > 0 && (
               <View style={styles.relatedSection}>
@@ -295,7 +307,7 @@ export default function AnimalDetailScreen({ route, navigation }) {
               <View style={styles.gallerySection}>
                 <Text style={styles.sectionTitle}>Bildegalleri</Text>
                 <View style={styles.galleryRow}>
-                  {animal.subImages.map((img, i) => (
+                  {(animal.subImages.length > 2 ? animal.subImages.slice(0, -1) : animal.subImages).map((img, i) => (
                     <View key={i} style={styles.galleryCardShadow}>
                       <View style={styles.galleryCard}>
                         <Image source={img} style={styles.galleryImg} resizeMode="cover" />
@@ -303,12 +315,18 @@ export default function AnimalDetailScreen({ route, navigation }) {
                     </View>
                   ))}
                 </View>
+                {animal.subImages.length > 2 && (
+                  <View style={[styles.galleryCardShadow, { marginTop: spacing.sm }]}>
+                    <View style={[styles.galleryCard, { aspectRatio: 16 / 9 }]}>
+                      <Image source={animal.subImages[animal.subImages.length - 1]} style={styles.galleryImg} resizeMode="cover" />
+                    </View>
+                  </View>
+                )}
               </View>
             )}
 
             <View style={{ height: spacing.xxl * 3 }} />
           </ScrollView>
-          </View>{/* indre panel */}
         </View>{/* ytre panel */}
       </SafeAreaView>
     </LinearGradient>
@@ -332,7 +350,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: spacing.lg,
-    height: 52,
+    paddingVertical: spacing.md,
+    height: 64,
   },
   backBtn: { justifyContent: 'center', alignItems: 'center' },
   backArrow: {
@@ -347,7 +366,6 @@ const styles = StyleSheet.create({
   panel: {
     flex: 1,
     backgroundColor: '#F4EFE6',
-    overflow: 'hidden',
   },
   scroll: { paddingBottom: spacing.xxl },
 
@@ -402,8 +420,10 @@ const styles = StyleSheet.create({
 
   // ── KNAPPER ─────────────────────────────────────────────────────────
   buttonRow: {
-    gap: spacing.sm,
-    padding: spacing.lg,
+    gap: spacing.lg,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.xl,
+    paddingBottom: spacing.lg,
   },
   btn: {
     flexDirection: 'row',
@@ -669,5 +689,30 @@ const styles = StyleSheet.create({
   galleryImg: {
     width: '100%',
     height: '100%',
+  },
+
+  // ── UNDRE SEG OVER ──────────────────────────────────────────────────
+  wonderCard: {
+    marginHorizontal: spacing.lg,
+    marginBottom: spacing.xl,
+    backgroundColor: 'rgba(229,216,164,0.15)',
+    borderRadius: radius.xl,
+    padding: spacing.lg,
+    borderWidth: 1.5,
+    borderColor: 'rgba(229,216,164,0.4)',
+  },
+  wonderTitle: {
+    fontFamily: 'Quicksand_700Bold',
+    fontSize: rf(14),
+    color: '#E5D8A4',
+    marginBottom: spacing.sm,
+    letterSpacing: 0.3,
+  },
+  wonderText: {
+    fontFamily: 'Quicksand_400Regular',
+    fontSize: rf(15),
+    color: '#F4EFE6',
+    lineHeight: rf(24),
+    fontStyle: 'italic',
   },
 });

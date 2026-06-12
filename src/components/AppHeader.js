@@ -5,7 +5,7 @@ import MenuDrawer from './MenuDrawer';
 
 const DEFAULT_LOGO = require('../../assets/logo/rare_dyr_logo_silva_land.png');
 
-export default function AppHeader({ navigation, logo }) {
+export default function AppHeader({ navigation, logo, onLogoPress }) {
   const { width } = useWindowDimensions();
   const logoW    = Math.min(width * 0.58, 260);
   const menuSize = Math.max(Math.min(width * 0.10, 52), 40);
@@ -15,7 +15,7 @@ export default function AppHeader({ navigation, logo }) {
     <>
       <View style={styles.bar}>
         <TouchableOpacity
-          onPress={() => navigation?.getParent()?.navigate('HjemTab') ?? navigation?.navigate('Hjem')}
+          onPress={onLogoPress ?? (() => navigation?.getParent()?.navigate('HjemTab') ?? navigation?.navigate('Hjem'))}
           activeOpacity={0.8}
           hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
         >

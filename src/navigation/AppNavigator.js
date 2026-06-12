@@ -22,9 +22,11 @@ const Tab = createBottomTabNavigator();
 const RootStack = createStackNavigator();
 const HomeStack = createStackNavigator();
 
+const CARD_STYLE = { flex: 1, backgroundColor: 'transparent' };
+
 function HomeStackNav() {
   return (
-    <HomeStack.Navigator screenOptions={{ headerShown: false }}>
+    <HomeStack.Navigator screenOptions={{ headerShown: false, cardStyle: CARD_STYLE }}>
       <HomeStack.Screen name="Hjem" component={HomeScreen} />
       <HomeStack.Screen name="DyrDetalj" component={AnimalDetailScreen} />
       <HomeStack.Screen name="Video" component={VideoScreen} />
@@ -36,7 +38,7 @@ function makeAnimalStack(category) {
   const S = createStackNavigator();
   return function AnimalStack() {
     return (
-      <S.Navigator screenOptions={{ headerShown: false }}>
+      <S.Navigator screenOptions={{ headerShown: false, cardStyle: CARD_STYLE }}>
         <S.Screen name="DyrListe" component={AnimalListScreen} initialParams={{ category }} />
         <S.Screen name="DyrDetalj" component={AnimalDetailScreen} />
         <S.Screen name="Video" component={VideoScreen} />
@@ -56,11 +58,16 @@ const TAB_BAR_HEIGHT = 100;
 function MainTabs() {
   return (
     <Tab.Navigator
-      tabBar={(props) => (
-        <View pointerEvents="box-none" style={{ height: TAB_BAR_HEIGHT, zIndex: 100, backgroundColor: 'transparent' }}>
-          <TabBar navigation={props.navigation} state={props.state} />
-        </View>
-      )}
+      tabBar={(props) => {
+        const activeTab = props.state.routes[props.state.index];
+        const activeScreen = activeTab?.state?.routes?.[activeTab.state?.index ?? 0]?.name;
+        if (activeScreen === 'DyrDetalj' || activeScreen === 'Video') return null;
+        return (
+          <View style={{ height: TAB_BAR_HEIGHT, zIndex: 100, backgroundColor: '#00000000', pointerEvents: 'box-none' }}>
+            <TabBar navigation={props.navigation} state={props.state} />
+          </View>
+        );
+      }}
       screenOptions={{
         headerShown: false,
         sceneStyle: { backgroundColor: 'transparent' },
@@ -80,9 +87,11 @@ export default function AppNavigator() {
   return (
     <View style={{ flex: 1, backgroundColor: '#29676A' }}>
       <NavigationContainer theme={AppTheme}>
-        <RootStack.Navigator screenOptions={{ headerShown: false, cardStyle: { backgroundColor: 'transparent' } }}>
+        <RootStack.Navigator screenOptions={{ headerShown: false, cardStyle: CARD_STYLE }}>
           <RootStack.Screen name="Intro" component={IntroScreen} />
           <RootStack.Screen name="Main" component={MainTabs} />
+          <RootStack.Screen name="OppdagelsesTab" component={DiscoveryBookScreen} />
+          <RootStack.Screen name="SpillTab" component={GameScreen} />
         </RootStack.Navigator>
       </NavigationContainer>
     </View>

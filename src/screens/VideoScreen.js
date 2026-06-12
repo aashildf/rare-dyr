@@ -3,6 +3,9 @@ import {
   View, Text, Image, ScrollView, TouchableOpacity,
   StyleSheet, useWindowDimensions,
 } from 'react-native';
+import { SvgXml } from 'react-native-svg';
+
+const bookmarkSvg = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 2H11V19L7.5 16.5L4 19V2Z M13 2H20V19L16.5 16.5L13 19V2Z" fill="white"/></svg>`;
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useVideoPlayer, VideoView } from 'expo-video';
@@ -23,6 +26,7 @@ function formatTime(secs) {
 function definitForm(word) {
   if (!word) return '';
   if (word.endsWith('dyr'))  return word + 'et';
+  if (word.endsWith('kt'))   return word + 'et';
   if (word.endsWith('fisk')) return word + 'en';
   if (word.endsWith('fugl')) return word + 'en';
   if (word.endsWith('ie'))   return word.slice(0, -1) + 'en';
@@ -63,6 +67,7 @@ export default function VideoScreen({ route, navigation }) {
   const [progress, setProgress]     = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration]     = useState(0);
+  const [liked, setLiked]           = useState(false);
   const timerRef = useRef(null);
 
   const player = useVideoPlayer(
@@ -173,20 +178,11 @@ export default function VideoScreen({ route, navigation }) {
               <Text style={styles.description}>{animal.videoDescription ?? animal.moreInfo}</Text>
             )}
 
-            {/* LAGRE + hjerte */}
-            <View style={styles.actionRow}>
-              <TouchableOpacity style={styles.lagreBtn}>
-                <Text style={styles.lagreBookmark}>⊟</Text>
-                <Text style={styles.lagreTxt}>LAGRE</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.heartBtn}>
-                <Image
-                  source={require('../../assets/svg/like_hjerte.svg')}
-                  style={styles.heartImg}
-                  resizeMode="contain"
-                />
-              </TouchableOpacity>
-            </View>
+            {/* LAGRE */}
+            <TouchableOpacity style={styles.lagreBtn}>
+              <SvgXml xml={bookmarkSvg} width={scale(22)} height={scale(22)} />
+              <Text style={styles.lagreTxt}>LAGRE</Text>
+            </TouchableOpacity>
 
             <View style={{ height: spacing.xxl }} />
           </ScrollView>
@@ -203,8 +199,8 @@ const styles = StyleSheet.create({
   outerPanel: {
     flex: 1,
     marginHorizontal: spacing.lg,
-    borderTopLeftRadius: radius.xl,
-    borderTopRightRadius: radius.xl,
+    marginBottom: spacing.lg,
+    borderRadius: radius.xl,
     overflow: 'hidden',
     backgroundColor: '#F4EFE6',
   },

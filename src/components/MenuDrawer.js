@@ -13,6 +13,8 @@ const kryssSvg = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xm
 
 const hengelasSvg = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 8H17V6C17 3.24 14.76 1 12 1C9.24 1 7 3.24 7 6V8H6C4.9 8 4 8.9 4 10V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V10C20 8.9 19.1 8 18 8ZM12 17C10.9 17 10 16.1 10 15C10 13.9 10.9 13 12 13C13.1 13 14 13.9 14 15C14 16.1 13.1 17 12 17ZM15.1 8H8.9V6C8.9 4.29 10.29 2.9 12 2.9C13.71 2.9 15.1 4.29 15.1 6V8Z" fill="#3F4A39"/></svg>`;
 
+const pilHoyreSvg = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 3L11 8L6 13" stroke="#3A6B44" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
 function HoverNavItem({ item, onPress }) {
   const [hovered, setHovered] = useState(false);
 
@@ -36,6 +38,7 @@ function HoverNavItem({ item, onPress }) {
       <Text style={[navItemStyles.label, hovered && navItemStyles.labelHovered]}>
         {item.label}
       </Text>
+      <SvgXml xml={pilHoyreSvg} width={16} height={16} style={navItemStyles.arrow} />
     </Pressable>
   );
 }
@@ -44,14 +47,14 @@ const navItemStyles = StyleSheet.create({
   pressable: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: spacing.md,
-    paddingVertical: 6,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: 9,
     gap: spacing.md,
-    marginHorizontal: spacing.sm,
-    marginVertical: 5,
+    marginHorizontal: spacing.lg,
+    marginVertical: 4,
     borderRadius: 8.708,
-    backgroundColor: "#d3cdb7",
-    boxShadow: "8px 8px 10px 0px #0F1F11",
+    backgroundColor: "#e6e0b6",
+    boxShadow: "2px 3px 6px rgba(15,31,17,0.30)",
     cursor: "pointer",
   },
   pressableHovered: {
@@ -59,16 +62,17 @@ const navItemStyles = StyleSheet.create({
   },
   container: {},
   containerHovered: {},
-  icon: { width: scale(56), height: scale(56), transform: [{ scale: 1.5 }] },
+  icon: { width: scale(58), height: scale(58), transform: [{ scale: 1.3 }], marginLeft: 4 },
   iconHovered: {
-    width: scale(56),
-    height: scale(56),
-    transform: [{ scale: 1.5 }],
+    width: scale(58),
+    height: scale(58),
+    transform: [{ scale: 1.3 }],
+    marginLeft: 4,
     opacity: 1,
   },
   placeholder: {
-    width: scale(42),
-    height: scale(42),
+    width: scale(36),
+    height: scale(36),
     backgroundColor: "rgba(125, 221, 200, 0.1)",
     borderRadius: radius.md,
   },
@@ -76,10 +80,14 @@ const navItemStyles = StyleSheet.create({
     fontFamily: "RumRaisin_400Regular",
     fontSize: rf(24),
     lineHeight: rf(30),
-    color: "#29332A",
+    color: "#3D5242",
+    flex: 1,
   },
   labelHovered: {
     color: "#1A2A1A",
+  },
+  arrow: {
+    opacity: 0.75,
   },
 });
 import { colors, spacing, radius, typography } from '../theme';
@@ -112,13 +120,13 @@ const NAV_ITEMS = [
   },
   {
     label: 'Oppdagelsesbok',
-    icon: require('../../assets/oppdagelsesbok.png'),
+    icon: require('../../assets/oppdagelsesbok_navicon.png'),
     route: 'OppdagelsesTab',
     tab: false,
   },
   {
     label: 'Spill og moro',
-    icon: require('../../assets/spill_og_moro.png'),
+    icon: require('../../assets/spill_navicon.png'),
     route: 'SpillTab',
     tab: false,
   },
@@ -184,6 +192,8 @@ export default function MenuDrawer({ visible, onClose, navigation }) {
             },
           }],
         });
+      } else {
+        navigation.navigate(item.route);
       }
     }, 250);
   };
@@ -213,7 +223,7 @@ export default function MenuDrawer({ visible, onClose, navigation }) {
           ]}
         >
           <LinearGradient
-            colors={["#3F4A39", "#B6D2C6"]}
+            colors={["#5C6B55", "#B6D2C6"]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={[styles.drawerGradient, { paddingTop: Math.max(insets.top, spacing.xl) }]}
@@ -222,7 +232,7 @@ export default function MenuDrawer({ visible, onClose, navigation }) {
             <View style={styles.drawerHeader}>
               <Image
                 source={require("../../assets/logo/rare_dyr_logo_silva_land.png")}
-                style={[styles.drawerLogo, { width: drawerWidth * 0.55 }]}
+                style={[styles.drawerLogo, { width: drawerWidth * 0.75 }]}
                 resizeMode="contain"
               />
               <TouchableOpacity
@@ -311,7 +321,7 @@ const styles = StyleSheet.create({
   drawerGradient: {
     flex: 1,
     paddingTop: spacing.xl,
-    paddingBottom: spacing.xxl,
+    paddingBottom: spacing.sm,
     justifyContent: 'space-between',
   },
 
@@ -321,19 +331,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: spacing.lg,
-    paddingBottom: spacing.md,
+    paddingBottom: spacing.xs,
   },
   drawerLogo: {
     aspectRatio: 2,
   },
   closeBtn: {
-    width: scale(40),
-    height: scale(40),
+    width: scale(30),
+    height: scale(30),
     borderRadius: scale(20),
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#E5D8A4',
     boxShadow: '3px 3px 6px rgba(0,0,0,0.6)',
+    
   },
   closeText: {
     color: '#004D56',
@@ -346,7 +357,7 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: 'rgba(255,255,255,0.12)',
     marginHorizontal: spacing.lg,
-    marginVertical: spacing.sm,
+    marginVertical: spacing.xs,
   },
 
   // Nav-items
@@ -380,7 +391,7 @@ const styles = StyleSheet.create({
   // Bunn
   bottomSection: {
     paddingBottom: spacing.md,
-    marginTop: spacing.sm,
+    marginTop: 0,
   },
   copyright: {
     fontFamily: typography.fonts.bodyRegular,
@@ -400,7 +411,7 @@ const styles = StyleSheet.create({
   bottomIconBox: {
     width: scale(30),
     height: scale(30),
-    backgroundColor: 'rgba(255,255,255,0.1)',
+    backgroundColor: 'rgba(255, 255, 255, 0.27)',
     borderRadius: radius.sm,
     justifyContent: 'center',
     alignItems: 'center',
@@ -415,10 +426,10 @@ const styles = StyleSheet.create({
     color: colors.cream,
   },
   lockedItem: {
-    opacity: 0.65,
+    opacity: 0.95,
   },
   lockedIconBox: {
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: 'rgba(255, 255, 255, 0.13)',
   },
   lockSymbol: {
     fontSize: rf(13),
@@ -430,20 +441,20 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
   },
 
-  // Innstillinger-knapp (liten, nedtonet)
+  // Innstillinger-knapp
   innstillingerBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 6,
-    gap: spacing.sm,
-    marginHorizontal: spacing.xl,
-    marginVertical: 2,
+    paddingHorizontal: spacing.md,
+    paddingVertical: 10,
+    gap: spacing.md,
+    marginHorizontal: spacing.lg,
+    marginVertical: 4,
     borderRadius: 8.708,
     borderWidth: 1,
     borderColor: 'rgba(30,89,105,0.78)',
-    backgroundColor: 'rgba(193,219,208,0.6)',
-    opacity: 0.75,
+    backgroundColor: 'rgba(193, 219, 208, 0.92)',
+    opacity: 0.72,
   },
   innstillingerLabel: {
     fontFamily: typography.fonts.body,
@@ -452,29 +463,29 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
-  // Foreldrekontroll-knapp (liten, nedtonet)
+  // Foreldrekontroll-knapp
   foreldreBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 6,
-    gap: spacing.sm,
-    marginHorizontal: spacing.xl,
-    marginVertical: 2,
+    paddingHorizontal: spacing.md,
+    paddingVertical: 10,
+    gap: spacing.md,
+    marginHorizontal: spacing.lg,
+    marginVertical: 4,
     borderRadius: 8.708,
     borderWidth: 1,
     borderColor: 'rgba(30,89,105,0.83)',
-    backgroundColor: 'rgba(229,216,164,0.6)',
-    opacity: 0.65,
+    backgroundColor: 'rgba(229, 216, 164, 0.92)',
+    opacity: 0.72,
   },
   foreldreLIcon: {
-    width: scale(24),
-    height: scale(24),
+    width: scale(28),
+    height: scale(28),
   },
   foreldreLabel: {
     fontFamily: typography.fonts.body,
     ...typography.body,
-    color: '#29332A',
+    color: '#131814',
     flex: 1,
   },
   lockSymbol: {

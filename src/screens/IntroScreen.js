@@ -82,7 +82,6 @@ export default function IntroScreen({ navigation }) {
 
   useEffect(() => {
     setAudioModeAsync({ playsInSilentModeIOS: true });
-    return () => { audioPlayer.remove(); };
   }, []);
 
   const stopSound = () => { try { audioPlayer.pause(); audioPlayer.seekTo(0); } catch (_) {} };

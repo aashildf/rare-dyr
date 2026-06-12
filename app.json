@@ -4,21 +4,19 @@
     "slug": "rare-dyr",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo/rare_dyr_logo_silva_land.png",
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
-        "monochromeImage": "./assets/android-icon-monochrome.png"
+        "backgroundColor": "#29676A",
+        "foregroundImage": "./assets/logo/rare_dyr_logo_silva_land.png"
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png",
+      "favicon": "./assets/logo/rare_dyr_logo_silva_land.png",
       "backgroundColor": "#1E3828"
     },
     "plugins": [

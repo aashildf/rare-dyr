@@ -89,6 +89,50 @@ export const animals = [
       require("../../assets/animals/land/tarsi_oye.png"),
     ],
     video: null,
+    wonderQuestion: "Tarsieren kan ikke bevege øynene – den snur heller hele hodet rundt. Hva tror du den ser på om natten som vi aldri legger merke til?",
+    discovered: false,
+  },
+  {
+    id: 26,
+    name: "Nebbdyr",
+    emoji: "🦆",
+    category: "land",
+    animalType: "Pattedyr",
+    habitatTag: "Kloakkdyr",
+    nickname: "Det levende fossilet",
+    location: "Australia og Tasmania",
+    size: "40–60 cm",
+    weight: "0,7–2,4 kg",
+    diet: "Krepsdyr, insektlarver og ormer",
+    activeTime: "Begge deler",
+    tracks: "Fem-tåede spor med svømmehud, 4–6 cm brede.",
+    rarity: "sjelden",
+    rarityText: "Sårbar",
+    rarityEmoji: "⚠️",
+    rarityDetail: "Tørke, demninger og forurensning har ført til at arten har forsvunnet fra store deler av sine naturlige leveområder.",
+    petScore: 1,
+    petComment: "Giftig pigg, legger egg og lyser i mørket. La den være i fred.",
+    funFact: "Hannene har en giftig pigg på bakbeina — og pelsen gløder blågrønt under UV-lys!",
+    moreInfo: "Nebbdyret er kanskje det rareste dyret som finnes! Det er et pattedyr, men legger egg som en fugl. Det har nebb som en and, hale som en bever, svømmehud som en oter — og hannene har en giftig pigg på bakbeina. Da de første nebbdyrene ble sendt til Europa på 1700-tallet, trodde mange forskere det var en spøk. Noen mente at noen hadde sydd et andehode på en beverhale for å lure dem!\n\nNebbdyret er heller ikke som andre pattedyr når det gjelder amming. Det har ingen spener — melken presses rett gjennom huden på magen, og ungene slikker den i seg. Under vann lukker nebbdyret både øyne og ører. I stedet bruker det nebbet til å fange opp elektriske signaler fra byttet — som en innebygd elektrisk detektor i ansiktet!\n\nNebbdyret tilbringer mesteparten av tiden i vannet på jakt, eller i opptil 5 meter lange huler i elvebredden. Det er utrolig tilpasningsdyktig og finnes i alt fra varme regnskog i nord til kalde fjellområder i sør.\n\nDen tilhører en urgammel dyregruppe kalt kloakkdyr, sammen med maurpinnsvinet. De skilte lag med andre pattedyr for hele 166 millioner år siden — på dinosaurenes tid! Det er derfor nebbdyret kalles et levende fossil. Forhistoriske nebbdyr hadde store, spisse tenner for å knuse reker og skjell — moderne nebbdyr har ingen tenner i det hele tatt.",
+    shortFacts: [
+      { icon: "special", text: "Pattedyr som legger egg — ett av bare fem slike arter i verden." },
+      { icon: "special", text: "Jakter blinde under vann ved å fange opp elektriske signaler fra byttet." },
+      { icon: "food",    text: "Hunnene har ingen spener — ungene slikker melken av mors mage." },
+      { icon: "special", text: "Pelsen gløder blågrønt under UV-lys!" },
+      { icon: "special", text: "Hannene har en giftig pigg på bakbeina som kan gi kraftige smerter." },
+      { icon: "special", text: "Et levende fossil — skilte lag med andre pattedyr for 166 millioner år siden." },
+    ],
+    habitatImage: null,
+    audioFact: null,
+    videoDescription: "Se nebbdyret svømme i elven og bruke nebbet til å lete etter mat på bunnen — øyne og ører lukket, bare den elektriske detektoren i arbeid!",
+    image: require("../../assets/animals/land/nebbdyr.png"),
+    subImages: [
+      require("../../assets/animals/land/nebbdyrfot.png"),
+      require("../../assets/animals/land/nebbdyrklo.png"),
+      require("../../assets/animals/land/nebbdyr_egg_unge.png"),
+    ],
+    video: null,
+    wonderQuestion: "Nebbdyret er et pattedyr, men legger egg. Hva tror du et dyr tenker på når det er så annerledes enn alle de andre?",
     discovered: false,
   },
   {
@@ -111,15 +155,15 @@ export const animals = [
     rarityDetail: "Verdens mest smuglede pattedyr.",
     petScore: 2,
     petComment: "Ville brukt hele huset som maurjaktområde.",
-    funFact: "Tungen kan være lengre enn kroppen!",
-    moreInfo:
-      "Pangolinen er et nattaktivt dyr som lever alene. Den bruker den lange, klebrige tungen til å fange tusenvis av maur og termitter hver natt. Skjellene er laget av keratin — det samme stoffet som neglene våre — og er så harde at selv løver og leoparder sliter med å bite gjennom dem. Dessverre er pangolinen det mest smuglede pattedyret i verden, ettertraktet for skjell og kjøtt.",
+    funFact: "Tungen er så lang at den må rulles opp og gjemmes helt nede i magen når den ikke brukes!",
+    moreInfo: "Pangolinen ser ut som en kjempestor, gående grankongle — og det er faktisk ikke så dumt sammenlignet! Skjellene er laget av keratin, det samme stoffet som neglene våre, og er det eneste pattedyret i verden med ekte skjell på kroppen.\n\nNår pangolinen blir redd, ruller den seg til en steinhard kule. Ballen er så hard at selv en sulten løve ikke klarer å bite hull på den. Og hvis mammaen er med babyen sin når faren oppstår, ruller hun seg rett rundt den lille — babyen ligger trygt gjemt inne i ballen.\n\nSpisemesteren: Pangolinen kan sluke over 190 000 maur og termitter på én eneste dag! Den har ingen tenner, så den svelger i stedet småstein som maser maten til mos nede i magen. For å slippe å få maur i nesa, kan den stenge både ørene og nesehulen helt mens den spiser.\n\nNaturens gravemaskin: De tre store, bøyde klørne er perfekte til å hakke hull i harde maurtuer. Når de graver, lufter de også jorda slik at planter vokser bedre — og hulene de etterlater seg blir gratis boliger for andre dyr.\n\nDessverre er pangolinen det mest smuglede pattedyret i verden, ettertraktet for skjell og kjøtt. Alle åtte artene er truet eller sterkt truet.",
     shortFacts: [
-      {
-        icon: "defense",
-        text: "Den bruker den lange tunga si for å fange maur.",
-      },
-      { icon: "food", text: "Den har harde skjell som beskytter kroppen." },
+      { icon: "special", text: "Det eneste pattedyret i verden med harde skjell på kroppen." },
+      { icon: "food",    text: "Kan spise over 190 000 maur og termitter på én dag." },
+      { icon: "special", text: "Tungen er lengre enn kroppen og må rulles opp i magen." },
+      { icon: "special", text: "Kan stenge ørene og nesa slik at maur ikke kryper inn." },
+      { icon: "special", text: "Babyen rir på mammaens hale — og gjemmes trygt inni ballen ved fare." },
+      { icon: "habitat", text: "Hulene de graver blir gratisboliger for andre dyr." },
     ],
     habitatImage: null,
     audioFact: null,
@@ -130,6 +174,24 @@ export const animals = [
       require("../../assets/animals/land/pangolin_detalj_skjell.png"),
     ],
     video: null,
+    quiz: [
+      {
+        question: "Hvor gjemmer skjelldyret den superlange tungen sin når den ikke spiser?",
+        options: ["I øret", "Rullet opp helt nede i magen", "Rundt halsen som et skjerf"],
+        answer: 1,
+      },
+      {
+        question: "Hva gjør skjelldyr-mammaen når en løve kommer?",
+        options: ["Hun løper kjempefort opp i et tre", "Hun gjemmer babyen under en stein", "Hun ruller seg til en ball rundt babyen sin"],
+        answer: 2,
+      },
+      {
+        question: "Siden skjelldyret ikke har tenner, hva svelger det for å mose maten i magen?",
+        options: ["Småstein", "Tyggegummi", "Kongler"],
+        answer: 0,
+      },
+    ],
+    wonderQuestion: "Pangolinen ruller seg til en kule når den er redd. Hva ville du gjort for å beskytte deg hvis du ikke hadde verken klør eller tenner?",
     discovered: false,
   },
   {
@@ -173,6 +235,7 @@ export const animals = [
       require("../../assets/animals/land/fossa_kitten.png"),
     ],
     video: null,
+    wonderQuestion: "Fossen er topprovdyret på Madagaskar. Hva tror du skjer med resten av dyrene når det ikke finnes noe som jakter på rovdyret?",
     discovered: false,
   },
   {
@@ -216,6 +279,7 @@ export const animals = [
       require("../../assets/animals/land/okapi_fullfigur.png"),
     ],
     video: null,
+    wonderQuestion: "Okapien har striper på beina, men ikke på resten av kroppen. Hvorfor tror du naturen har laget den akkurat sånn?",
     discovered: false,
   },
   {
@@ -259,6 +323,7 @@ export const animals = [
       require("../../assets/animals/land/glassfrosk_hode.png"),
     ],
     video: null,
+    wonderQuestion: "Glassfrosken har gjennomsiktig mage – du kan se hjertet slå. Hva tror du det ville bety hvis alle kunne se inn i deg?",
     discovered: false,
     related: [25],
   },
@@ -300,6 +365,7 @@ export const animals = [
       require("../../assets/animals/land/moldvarp_nesen.png"),
     ],
     video: null,
+    wonderQuestion: "Stjernenesen 'ser' verden gjennom snuten sin. Hva tror du den oppdager der nede i mørket som vi aldri ville lagt merke til?",
     discovered: false,
   },
   {
@@ -339,6 +405,7 @@ export const animals = [
       require("../../assets/animals/land/aye_aye_hode.png"),
     ],
     video: null,
+    wonderQuestion: "Aye-ayen jages bort fordi mange tror den bringer ulykke. Synes du det er rettferdig å få et dårlig rykte bare fordi man ser annerledes ut?",
     discovered: false,
   },
   {
@@ -379,6 +446,7 @@ export const animals = [
     videoDescription: "På denne videoen ser vi en bladhalet gekko sitte helt stille på en tregren — det er nesten umulig å se den! Kameraet zoomer sakte inn, og plutselig oppdager vi den perfekt kamuflerte gekkoen.",
     image: require("../../assets/animals/land/bladhalet_gekko.png"),
     video: null,
+    wonderQuestion: "Bladhalt geckoen er nesten umulig å se, selv om den sitter rett foran deg. Finnes det noe i din hverdag som du ikke legger merke til, men som kanskje er der hele tiden?",
     discovered: false,
   },
   {
@@ -419,6 +487,7 @@ export const animals = [
     videoDescription: "På denne videoen ser vi en koloni nakne muldvarpmus som jobber i tunnelene sine under bakken. Dronningen, som er mye større enn de andre, styrer det hele fra midten av kolonien.",
     image: require("../../assets/animals/land/nakne_muldvarp_rotter.png"),
     video: null,
+    wonderQuestion: "De nakne muldvarpmusa lever hele livet under bakken uten å se sollys. Hva tror du de savner aller mest – og hva tror du de ikke savner i det hele tatt?",
     discovered: false,
   },
   {
@@ -459,6 +528,7 @@ export const animals = [
     videoDescription: "På denne videoen ser vi en flokk saiga-antiloper galoppere over den enorme, åpne steppen. Se den rare, hengende nesen — den fungerer som filter og varmer kald luft om vinteren!",
     image: require("../../assets/animals/land/saiga_antilope.png"),
     video: null,
+    wonderQuestion: "Saiga-antilopens rare nese ser merkelig ut for oss – men er perfekt for å overleve. Kan du tenke på noe du har som ser rart ut, men som egentlig er veldig nyttig?",
     discovered: false,
   },
 
@@ -505,6 +575,7 @@ export const animals = [
       require("../../assets/animals/vann/axolotl_hand.png"),
     ],
     video: null,
+    wonderQuestion: "Aksolotlen kan gro ut nye bein hvis de faller av. Hvis du kunne gro ut hva som helst på nytt, hva ville du valgt?",
     discovered: false,
   },
   {
@@ -549,6 +620,7 @@ export const animals = [
       require("../../assets/animals/vann/blobfisk_real.png"),
     ],
     video: null,
+    wonderQuestion: "Blobfisken ser trist ut på land, men er helt normal nede i havet. Har du noen gang sett noe som virket helt feil, men egentlig hadde sin helt riktige plass?",
     discovered: false,
   },
   {
@@ -593,6 +665,7 @@ export const animals = [
       require("../../assets/animals/vann/narhval_horn.png"),
     ],
     video: null,
+    wonderQuestion: "Narhvalens horn er egentlig en tann som stikker ut gjennom leppene. Hva tror du den bruker den lange tannen til?",
     discovered: false,
   },
   {
@@ -637,6 +710,7 @@ export const animals = [
       require("../../assets/animals/vann/dumbo_blekksprut_detalj.png"),
     ],
     video: null,
+    wonderQuestion: "Dumbo-blekkspruten flyr gjennom havet med store ørefinlignende vinger. Hva ville du gjort annerledes i livet ditt hvis du hadde vinger?",
     discovered: false,
   },
   {
@@ -682,6 +756,7 @@ export const animals = [
       require("../../assets/animals/vann/mantis_oyne.png"),
     ],
     video: null,
+    wonderQuestion: "Mantisreken kan se 16 farger – vi kan bare se tre. Hva tror du verden ser ut for den sammenlignet med det vi ser?",
     discovered: false,
   },
   {
@@ -727,6 +802,7 @@ export const animals = [
       require("../../assets/animals/vann/sjodrage_detalj.png"),
     ],
     video: null,
+    wonderQuestion: "Sjødragen er så godt kamuflert at det er nesten umulig å se den. Hva tror du det ville bety for livet ditt om ingen kunne se deg?",
     discovered: false,
   },
   {
@@ -773,6 +849,7 @@ export const animals = [
       require("../../assets/animals/vann/vampyrblekksprut_lite.png"),
     ],
     video: null,
+    wonderQuestion: "Vampyrblekkspruten har et skummelt navn, men er egentlig ganske fredelig. Synes du det er rettferdig å bli kalt noe skummelt bare fordi man ser litt annerledes ut?",
     discovered: false,
   },
   {
@@ -817,6 +894,7 @@ export const animals = [
       require("../../assets/animals/vann/maanefisk_hode.png"),
     ],
     video: null,
+    wonderQuestion: "Månefisken er den tyngste benfisken i verden, men er en veldig dårlig svømmer. Hva tror du er viktigst – å være rask eller å være stor?",
     discovered: false,
   },
   {
@@ -840,23 +918,27 @@ export const animals = [
     petScore: 2,
     petComment: "Måtte hatt en vulkan på bunnen av akvariet.",
     funFact:
-      "Armene ser pelsete ut fordi de er dekket av bakterier — som den dyrker og spiser!",
-    moreInfo: null,
+      "En art av yeti-krabbe fikk kallenavnet «Hoff-krabben» fordi det tette brysthåret minnet forskerne om skuespilleren David Hasselhoff!",
+    moreInfo:
+      "Yeti-krabben er ingen vanlig krabbe! Den bor dypt nede på havbunnen, ved ekstremt varme undervannskilder der vannet kan nå 400 grader. Mellom det brennhete kildevannet og det iskalde havet er det bare et bittelite område med passe temperatur — og der krabber det av yeti-krabber som sitter tett i tett for ikke å fryse eller brenne seg.\n\nDet kuleste er kanskje maten: yeti-krabben dyrker sine egne bakterier! Pelsklørne er dekket av bakterier som krabben «gjødsler» ved å vaie armene frem og tilbake i vannet. Det ser ut som en dans — men egentlig tilfører krabben oksygen til bakteriene slik at de vokser. Deretter spiser den dem!\n\nFordi den lever i total mørke, har yeti-krabben nesten ingen syn. Øynene har mistet pigmentet og regnes som blinde. Til gjengjeld er den utrolig god til å kjenne vibrasjoner og kjemikalier i vannet.\n\nSlektsnavnet Kiwa kommer fra en polynesisk gudinne for skalldyr. Og én art — Kiwa tyleri — har fått kallenavnet «Hoff-krabben», fordi hårene på brystet minnet forskerne om skuespilleren David Hasselhoff!",
     shortFacts: [
-      {
-        icon: "food",
-        text: 'Den "dyrker" sin egen mat ved å vifte bakterievekst på armene.',
-      },
-      {
-        icon: "habitat",
-        text: "Lever ved hydrotermale kilder der temperaturen er over 400 grader.",
-      },
+      { icon: "food",    text: "Den dyrker bakterier på armene ved å vaie dem frem og tilbake — og spiser dem!" },
+      { icon: "special", text: "«Dansen» er egentlig jobb: vaiingen tilfører oksygen til bakteriene." },
+      { icon: "habitat", text: "Lever ved hydrotermale kilder der temperaturen er over 400°C." },
+      { icon: "special", text: "Øynene mangler pigment — yeti-krabben er blind." },
+      { icon: "special", text: "Slektsnavnet Kiwa er oppkalt etter en polynesisk gudinne for skalldyr." },
+      { icon: "special", text: "Arten Kiwa tyleri kalles «Hoff-krabben» etter David Hasselhoff og hans brysthår." },
     ],
     habitatImage: null,
     audioFact: null,
     videoDescription: "På denne videoen ser vi en yeti-krabbe vaie armene frem og tilbake ved et varmt havkilde på havbunnen. Den ser ut som den danser — men den dyrker egentlig bakteriene som er middagen dens!",
-    image: null,
+    image: require("../../assets/animals/vann/yetikrabbe.png"),
+    subImages: [
+      require("../../assets/animals/vann/yetikrabbe_klo.png"),
+      require("../../assets/animals/vann/yeti_detalj.png"),
+    ],
     video: null,
+    wonderQuestion: "Yeti-krabben dyrker maten sin på sine egne armer. Hva ville du tatt med deg overalt hvis du skulle bære frokosten din på kroppen?",
     discovered: false,
   },
 
@@ -896,6 +978,7 @@ export const animals = [
       require("../../assets/animals/luft/kolibri_lite.png"),
     ],
     video: null,
+    wonderQuestion: "Kolibrien er den eneste fuglen som kan fly bakover. Hvis du kunne bevege deg i alle retninger som en kolibri, hvor ville du dratt aller først?",
     discovered: false,
   },
   {
@@ -935,6 +1018,7 @@ export const animals = [
     videoDescription: "På denne videoen ser vi en kakapo som vandrer rolig rundt på bakken og snuser på planter. Den prøver å klatre opp i et tre, men gir fort opp — det er ikke akkurat dens sterke side!",
     image: require('../../assets/animals/luft/kakapo.png'),
     video: null,
+    wonderQuestion: "Kakapo-en er en fugl som ikke kan fly. Hva tror du den tenker når den ser de andre fuglene lette mot himmelen?",
     discovered: false,
   },
   {
@@ -979,6 +1063,7 @@ export const animals = [
       require("../../assets/animals/luft/sekretaerfugl_hode.png"),
     ],
     video: null,
+    wonderQuestion: "Sekretærfuglen er kledd som om den skal på jobb. Hvorfor tror du noen dyr ser ut som om de har en «arbeidsuniform»?",
     discovered: false,
   },
   {
@@ -1023,6 +1108,7 @@ export const animals = [
       require("../../assets/animals/luft/flygende_hund_hode.png"),
     ],
     video: null,
+    wonderQuestion: "Den flygende hunden er egentlig en stor flaggermus. Hva tror du som gjør at vi kaller den 'hund' når den ikke er det i det hele tatt?",
     discovered: false,
   },
   {
@@ -1060,6 +1146,7 @@ export const animals = [
       require("../../assets/animals/luft/greta_oto_wing.png"),
     ],
     video: null,
+    wonderQuestion: "Glassvingsommerfuglens vinger er gjennomsiktige som glass. Hva tror du sommerfuglen ser gjennom vingene sine når den flyr?",
     discovered: false,
   },
   {
@@ -1097,6 +1184,7 @@ export const animals = [
       require("../../assets/animals/luft/lyrefugl_hode.png"),
     ],
     video: null,
+    wonderQuestion: "Lyrefuglen kan etterlikne lyden av en motorsag. Hva tror du det høres ut som for en fugl å høre alle menneskenes lyder?",
     discovered: false,
   },
 ];

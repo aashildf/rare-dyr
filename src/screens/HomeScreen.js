@@ -142,22 +142,26 @@ function GlitterIcon({ icon, label, tab, elevated, iconWidth, navigation }) {
 }
 
 export default function HomeScreen({ navigation }) {
-  const { width } = useWindowDimensions();
+  const { width, height } = useWindowDimensions();
 
   return (
-    <LinearGradient
-      colors={gradients.background}
-      style={styles.gradient}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 0.2, y: 1 }}
-    >
+    <View style={[styles.gradient, { height }]}>
+      <LinearGradient
+        colors={gradients.background}
+        style={StyleSheet.absoluteFillObject}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0.2, y: 1 }}
+        pointerEvents="none"
+      />
       <SafeAreaView style={styles.safeArea}>
+        <AppHeader navigation={navigation} />
         <ScrollView
+          style={{ flex: 1 }}
           showsVerticalScrollIndicator={false}
+          overScrollMode="never"
+          nestedScrollEnabled
           contentContainerStyle={styles.scroll}
         >
-          <AppHeader navigation={navigation} />
-
           {/* Portal-blokk med radial-gradient */}
           <View style={styles.portalWrapper}>
             {/* Tekst-seksjon over bildet */}
@@ -167,7 +171,8 @@ export default function HomeScreen({ navigation }) {
                 <SpeakButton />
               </View>
               <Text style={styles.greetingSubtitle}>
-                Bli med meg og oppdag rare dyr fra hele verden. Hvor vil du utforske først?
+                Bli med meg og oppdag rare dyr fra hele verden. Hvor vil du
+                utforske først?
               </Text>
             </View>
 
@@ -179,56 +184,58 @@ export default function HomeScreen({ navigation }) {
                 resizeMode="cover"
               />
               <View style={styles.categoryArc}>
-                <GlitterIcon icon={require("../../assets/ikoner/luft_ikonet_fylt.png")} label="Luft" tab="LuftTab"                  iconWidth={width * 0.27} navigation={navigation} />
-                <GlitterIcon icon={require("../../assets/ikoner/land_ikonet_fylt.png")} label="Land" tab="SkogTab" elevated          iconWidth={width * 0.27} navigation={navigation} />
-                <GlitterIcon icon={require("../../assets/ikoner/vann_ikonet_fylt.png")} label="Vann" tab="VannTab"                  iconWidth={width * 0.27} navigation={navigation} />
+                <GlitterIcon
+                  icon={require("../../assets/ikoner/luft_ikonet_fylt.png")}
+                  label="Luft"
+                  tab="LuftTab"
+                  iconWidth={width * 0.27}
+                  navigation={navigation}
+                />
+                <GlitterIcon
+                  icon={require("../../assets/ikoner/land_ikonet_fylt.png")}
+                  label="Land"
+                  tab="SkogTab"
+                  elevated
+                  iconWidth={width * 0.27}
+                  navigation={navigation}
+                />
+                <GlitterIcon
+                  icon={require("../../assets/ikoner/vann_ikonet_fylt.png")}
+                  label="Vann"
+                  tab="VannTab"
+                  iconWidth={width * 0.27}
+                  navigation={navigation}
+                />
               </View>
             </View>
           </View>
 
           {/* Spill og Moro */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Spill og moro</Text>
-            <View style={styles.gameRow}>
-              {[
-                {
-                  src: require("../../assets/quiz.jpg"),
-                  label: "Dyrequiz",
-                },
-                {
-                  src: require("../../assets/dyrespor2.png"),
-                  label: "Finn sporene",
-                },
-              ].map(({ src, label }) => (
-                <TouchableOpacity
-                  key={label}
-                  style={styles.gameCard}
-                  onPress={() => navigation.navigate("Spill")}
-                >
-                  <Image
-                    source={src}
-                    style={styles.gameCardImg}
-                    resizeMode="contain"
-                  />
-                  <View style={styles.gameCardOverlay}>
-                    <Text style={styles.gameCardLabel}>{label}</Text>
-                  </View>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
+          <TouchableOpacity
+            style={styles.spillBtn}
+            onPress={() => navigation.navigate("SpillTab")}
+            activeOpacity={0.85}
+          >
+            <LinearGradient
+              colors={["#9fc192", "#457258"]}
+              style={styles.spillBtnInner}
+            >
+              <Image source={require('../../assets/spill_og_moro/spill_ikon.png')} style={styles.btnIcon} resizeMode="contain" />
+              <View style={styles.spillText}>
+                <Text style={styles.spillTitle}>Spill og moro</Text>
+                <Text style={styles.spillSub}></Text>
+              </View>
+              <Text style={styles.spillArrow}>›</Text>
+            </LinearGradient>
+          </TouchableOpacity>
 
           {/* Min Oppdagelsesbok */}
           <TouchableOpacity
             style={styles.discoveryWidget}
-            onPress={() => navigation.navigate("Oppdagelsesbok")}
+            onPress={() => navigation.navigate("OppdagelsesTab")}
             activeOpacity={0.85}
           >
-            <Image
-              source={require("../../assets/oppdagelsesbok.png")}
-              style={styles.silvaMini}
-              resizeMode="contain"
-            />
+            <Image source={require('../../assets/oppdagelsebok/oppdagelsesbok_ikon.png')} style={styles.btnIcon} resizeMode="contain" />
             <View style={styles.discoveryCenter}>
               <Text style={styles.discoveryTitle}>Min Oppdagelsesbok</Text>
               <Text style={styles.discoveryCount}>12 av 40 dyr funnet</Text>
@@ -278,7 +285,12 @@ export default function HomeScreen({ navigation }) {
                   <Text style={styles.locationIcon}>📍</Text>
                   <Text style={styles.locationText}>Afrika & Asia</Text>
                 </View>
-                <TouchableOpacity style={styles.utforskButton} onPress={() => navigation.navigate("DyrDetalj", { animalId: 4 })}>
+                <TouchableOpacity
+                  style={styles.utforskButton}
+                  onPress={() =>
+                    navigation.navigate("DyrDetalj", { animalId: 4 })
+                  }
+                >
                   <Text style={styles.utforskText}>Utforsk</Text>
                 </TouchableOpacity>
               </View>
@@ -288,24 +300,24 @@ export default function HomeScreen({ navigation }) {
           <View style={{ height: spacing.xxl }} />
         </ScrollView>
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  gradient:  { flex: 1 },
-  safeArea:  { flex: 1 },
-  scroll:    { paddingHorizontal: spacing.lg, paddingTop: spacing.sm },
+  gradient: { flex: 1 },
+  safeArea: { flex: 1 },
+  scroll: { paddingHorizontal: spacing.lg },
 
   // Header
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: spacing.md,
   },
   menuButton: {
-    backgroundColor: 'rgba(255,255,255,0.15)',
+    backgroundColor: "rgba(255,255,255,0.15)",
     borderRadius: radius.sm,
     padding: spacing.sm,
   },
@@ -319,10 +331,11 @@ const styles = StyleSheet.create({
   portalWrapper: {
     marginBottom: spacing.lg,
     borderRadius: radius.xl,
-    overflow: 'hidden',
-    width: '100%',
-    backgroundImage: 'radial-gradient(52.74% 52.75% at 48.84% 47.26%, #8E8E3A 0%, #3F3F17 100%)',
-    backgroundColor: '#3F3F17',
+    overflow: "hidden",
+    width: "100%",
+    backgroundImage:
+      "radial-gradient(52.74% 52.75% at 48.84% 47.26%, #8E8E3A 0%, #3F3F17 100%)",
+    backgroundColor: "#3F3F17",
     paddingBottom: spacing.xl,
   },
   greetingSection: {
@@ -331,19 +344,19 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.xl,
   },
   greetingRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     marginBottom: spacing.sm,
     paddingRight: spacing.xl,
   },
   greeting: {
     fontFamily: typography.fonts.logo,
     ...typography.display,
-    color: '#E5D8A4',
-    textShadow: '0px 2px 8px rgba(0,0,0,0.6)',
-    WebkitTextStrokeWidth: '1px',
-    WebkitTextStrokeColor: 'rgba(0,0,0,0.3)',
+    color: "#E5D8A4",
+    textShadow: "0px 2px 8px rgba(0,0,0,0.6)",
+    WebkitTextStrokeWidth: "1px",
+    WebkitTextStrokeColor: "rgba(0,0,0,0.3)",
     flex: 1,
   },
   speakBtnOuter: {
@@ -351,53 +364,53 @@ const styles = StyleSheet.create({
     height: scale(42),
     borderRadius: scale(21),
     borderWidth: 1.5,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginLeft: 0,
   },
   speakBtn: {
     width: scale(36),
     height: scale(36),
     borderRadius: scale(18),
-    backgroundColor: 'rgba(229,216,164,0.2)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(229,216,164,0.2)",
+    justifyContent: "center",
+    alignItems: "center",
   },
-  speakBtnActive: { backgroundColor: 'rgba(229,216,164,0.45)' },
+  speakBtnActive: { backgroundColor: "rgba(229,216,164,0.45)" },
   speakIcon: {
     width: scale(20),
     height: scale(20),
-    tintColor: '#E5D8A4',
+    tintColor: "#E5D8A4",
   },
   greetingSubtitle: {
     fontFamily: typography.fonts.body,
     ...typography.h3,
     color: colors.cream,
-    textAlign: 'left',
+    textAlign: "left",
     marginTop: spacing.xs,
     opacity: 0.9,
   },
   portalImageBox: {
-    width: '100%',
-    position: 'relative',
+    width: "100%",
+    position: "relative",
   },
-  portalImage: { width: '100%' },
+  portalImage: { width: "100%" },
 
   // Kategori-bue over Silva
   categoryArc: {
-    position: 'absolute',
-    top: '2%',
+    position: "absolute",
+    top: "2%",
     left: 0,
     right: 0,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'flex-end',
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "flex-end",
     paddingHorizontal: spacing.lg,
   },
   arcItem: {
-    alignItems: 'center',
-    flexDirection: 'column',
-    justifyContent: 'flex-end',
+    alignItems: "center",
+    flexDirection: "column",
+    justifyContent: "flex-end",
   },
   arcItemElevated: {
     marginBottom: spacing.xl,
@@ -409,60 +422,61 @@ const styles = StyleSheet.create({
     fontFamily: typography.fonts.bodyBold,
     ...typography.body,
     color: colors.cream,
-    textShadow: '0px 0px 8px rgba(0,0,0,1), 0px 2px 6px rgba(0,0,0,0.9)',
-    WebkitTextStrokeWidth: '0.5px',
-    WebkitTextStrokeColor: 'rgba(0,0,0,0.6)',
+    textShadow: "0px 0px 8px rgba(0,0,0,1), 0px 2px 6px rgba(0,0,0,0.9)",
+    WebkitTextStrokeWidth: "0.5px",
+    WebkitTextStrokeColor: "rgba(0,0,0,0.6)",
     marginTop: -15,
   },
 
-  // Seksjoner
-  section:      { marginBottom: spacing.lg },
-  sectionTitle: {
-    fontFamily: typography.fonts.bodyBold,
-    ...typography.h2,
-    color: colors.cream,
-    marginBottom: spacing.sm,
+  // Spill og moro-knapp
+  spillBtn: {
+    borderRadius: radius.xl,
+    overflow: "hidden",
+    marginBottom: spacing.lg,
+    boxShadow: "0px 4px 12px rgba(0,0,0,0.4)",
+    elevation: 6,
   },
-
-  // Spill-kort
-  gameRow: { flexDirection: 'row', gap: spacing.sm },
-  gameCard: {
-    flex: 1,
-    aspectRatio: 1,
-    borderRadius: radius.lg,
-    overflow: 'hidden',
-    justifyContent: 'flex-end',
-    backgroundColor: colors.surfaceDark,
+  spillBtnInner: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: spacing.lg,
+    gap: spacing.md,
   },
-  gameCardImg: {
-    width: '100%',
-    height: '100%',
+  btnIcon: { width: scale(48), height: scale(48) },
+  spillText: { flex: 1 },
+  spillTitle: {
+    fontFamily: "RumRaisin_400Regular",
+    fontSize: rf(32),
+    color: "#E5D8A4",
   },
-  gameCardOverlay: {
-    backgroundColor: 'rgba(0,0,0,0.38)',
-    paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.md,
+  spillSub: {
+    fontFamily: "Quicksand_400Regular",
+    fontSize: rf(12),
+    color: "rgba(244,239,230,0.7)",
+    marginTop: 2,
   },
-  gameCardLabel: {
-    fontFamily: typography.fonts.bodyBold,
-    ...typography.body,
-    color: colors.cream,
-    textAlign: 'center',
+  spillArrow: {
+    fontSize: rf(56),
+    color: "#E5D8A4",
+    lineHeight: rf(46),
+    includeFontPadding: false,
+    textAlignVertical: "center",
+    marginTop: -12,
   },
 
   // Oppdagelsesbok
   discoveryWidget: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: colors.surface,
     borderRadius: radius.lg,
     padding: spacing.md,
     marginBottom: spacing.lg,
     gap: spacing.sm,
   },
-  silvaMini:       { width: scale(48), height: scale(48) },
+  silvaMini: { width: scale(48), height: scale(48) },
   discoveryCenter: { flex: 1 },
-  discoveryTitle:  {
+  discoveryTitle: {
     fontFamily: typography.fonts.bodyBold,
     ...typography.body,
     color: colors.primary,
@@ -475,13 +489,13 @@ const styles = StyleSheet.create({
   },
   progressBar: {
     height: 6,
-    backgroundColor: 'rgba(63,74,57,0.15)',
+    backgroundColor: "rgba(63,74,57,0.15)",
     borderRadius: radius.full,
     marginTop: spacing.xs,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   progressFill: {
-    height: '100%',
+    height: "100%",
     backgroundColor: colors.land.main,
     borderRadius: radius.full,
   },
@@ -493,29 +507,29 @@ const styles = StyleSheet.create({
 
   // Eventyr
   adventureCard: {
-    backgroundColor: 'rgba(244,239,230,0.12)',
+    backgroundColor: "rgba(244,239,230,0.12)",
     borderRadius: radius.lg,
     padding: spacing.md,
     marginBottom: spacing.lg,
   },
   adventureHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: spacing.sm,
   },
   adventureTitle: {
     fontFamily: typography.fonts.bodyBold,
-    ...typography.h3,
+    ...typography.h2,
     color: colors.secondary,
     flex: 1,
   },
   adventureImage: {
-    width: '100%',
+    width: "100%",
     aspectRatio: 16 / 9,
     borderRadius: radius.md,
     marginBottom: spacing.sm,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   adventureTeaser: {
     fontFamily: typography.fonts.bodyRegular,
@@ -527,23 +541,23 @@ const styles = StyleSheet.create({
   featuredCard: {
     backgroundColor: colors.surface,
     borderRadius: radius.xl,
-    overflow: 'hidden',
+    overflow: "hidden",
     marginBottom: spacing.lg,
   },
   featuredImageBox: {
-    width: '100%',
+    width: "100%",
     aspectRatio: 16 / 9,
-    overflow: 'hidden',
+    overflow: "hidden",
     backgroundColor: colors.vann.dark,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   featuredImg: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   },
   dagensTag: {
-    position: 'absolute',
+    position: "absolute",
     top: spacing.sm,
     left: spacing.sm,
     backgroundColor: colors.secondary,
@@ -556,7 +570,7 @@ const styles = StyleSheet.create({
     fontSize: rf(11),
     color: colors.primary,
   },
-  featuredInfo:     { padding: spacing.md },
+  featuredInfo: { padding: spacing.md },
   featuredName: {
     fontFamily: typography.fonts.bodyBold,
     ...typography.h2,
@@ -570,14 +584,14 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   featuredFooter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginTop: spacing.sm,
   },
   locationChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 4,
     backgroundColor: colors.surfaceDark,
     paddingHorizontal: spacing.sm,
