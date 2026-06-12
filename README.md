@@ -1,5 +1,7 @@
 # Rare Dyr
 
+> 🚧 **Dette prosjektet er under aktiv utvikling og er ikke ferdig.** Innhold, design og funksjonalitet vil endre seg underveis.
+
 **Rare Dyr** er en interaktiv mobilapp for barn (ca. 6–12 år) som lar brukeren utforske sjeldne og fascinerende dyr gjennom bilder, korte beskrivelser og en leken opplevelse.
 
 ## Prosessoversikt
